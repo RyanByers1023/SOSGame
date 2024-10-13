@@ -2,8 +2,7 @@ package sos.ryanbyers.sosjavafx;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
@@ -11,165 +10,63 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import java.util.function.Function;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SOSGUI extends Application  {
-
-    //buttons, labels, etc. map naming convention:
-    //keys are camelCase w/ special characters removed -- General Gamemode: --> generalGamemode, Gamemode --> gameMode, etc.
-    private Map<String, RadioButton> buttons;
-    private Map<String, Label> labels;
-    private Map<String, HBox> hBoxes;
-    private Map<String, VBox> vBoxes;
+    private ButtonHolder buttons;
+    private LabelHolder labels;
+    private HBoxHolder hBoxes;
+    private VBoxHolder vBoxes;
 
     @Override
     public void start(Stage primaryStage) {
         InitializeUIElements();
-
-
-
-        DisplayWindow(primaryStage, vBoxes.get("mainBox"), 360, 640);
+        DisplayWindow(primaryStage, vBoxes.mainBox, 720, 1280);
     }
 
     private void InitializeUIElements(){
-        buttons = InitializeButtons(); //buttonName, referenced button
-        labels = InitializeLabels(); //labelName, referenced label
-
-        hBoxes = InitializeHBoxes(); //hbox, referenced hbox
-        vBoxes = InitializeVBoxes(); //vbox, referenced vbox
+        buttons = new ButtonHolder();
+        labels = new LabelHolder();
+        hBoxes = new HBoxHolder();
+        vBoxes = new VBoxHolder();
 
         //insert labels, buttons, hBoxes, vBoxes into boxes where necessary:
         FillHBoxes();
         FillVBoxes();
+    }
+
+    private void FillHBoxes(){
+        //add gamemode selection + board size buttons/input fields:
+        hBoxes.gameOptionsBox.getChildren().addAll(labels.gamemode, buttons.simpleGamemode, buttons.generalGamemode, labels.boardSize);
 
         //create spinner to allow for board size selection:
         //note: spinner doesn't allow for unique user input, invalid input tests are unneccessary
         Spinner<Integer> boardSizeSpinner = new Spinner<>(3, 30, 5); //min: 3, max: 30, default: 5
-        boardSizeSpinner.setPrefWidth(52); //this width can accomodate integers < 100 
+        boardSizeSpinner.setPrefWidth(52); //this width can accomodate integers < 100
+        hBoxes.gameOptionsBox.getChildren().add(boardSizeSpinner);
 
-        hBoxes.get("gameOptionsBox").getChildren().add(boardSizeSpinner);
+        hBoxes.gameSpaceBox.getChildren().addAll(vBoxes.redPlayerChoicesBox, vBoxes.sosGridBox, vBoxes.bluePlayerChoicesBox);
+
+        hBoxes.playerTurnBox.getChildren().add(labels.currentTurn);
+        hBoxes.playerTurnBox.getChildren().add(labels.turnIndicator);
+
+        hBoxes.startBox.getChildren().add(buttons.startButton);
     }
 
-    private static Map<String, RadioButton> InitializeButtons(){
-        //gamemode radio buttons
-        ToggleGroup gamemodeToggle = new ToggleGroup();
-        RadioButton simpleGamemode = new RadioButton("Simple game");
-        RadioButton generalGamemode = new RadioButton("General game");
+    private void FillVBoxes(){
+        vBoxes.mainBox.getChildren().add(hBoxes.gameOptionsBox);
 
-        //set correct group (gamemode group)
-        simpleGamemode.setToggleGroup(gamemodeToggle);
-        generalGamemode.setToggleGroup(gamemodeToggle);
+        vBoxes.redPlayerChoicesBox.getChildren().addAll(labels.redPlayer, buttons.redS, buttons.redO);
+        vBoxes.bluePlayerChoicesBox.getChildren().addAll(labels.bluePlayer, buttons.blueS, buttons.blueO);
 
-        //Blue player piece choice radio buttons
-        ToggleGroup bluePieceToggle = new ToggleGroup();
-        RadioButton blueS = new RadioButton("S");
-        RadioButton blueO = new RadioButton("O");
+        vBoxes.mainBox.getChildren().add(hBoxes.gameSpaceBox);
 
-        blueS.setToggleGroup(bluePieceToggle);
-        blueO.setToggleGroup(bluePieceToggle);
-
-        //Red player piece choice radio buttons 
-        ToggleGroup redPieceToggle = new ToggleGroup();
-        RadioButton redS = new RadioButton("S");
-        RadioButton redO = new RadioButton("O");
-
-        redS.setToggleGroup(redPieceToggle);
-        redO.setToggleGroup(redPieceToggle);
-
-        //place all buttons into a map:
-        Map<String, RadioButton> buttons = new HashMap<>();
-        buttons.put("simpleGamemode", simpleGamemode);
-        buttons.put("generalGamemode", generalGamemode);
-        buttons.put("blueS", blueS);
-        buttons.put("blueO", blueO);
-        buttons.put("redS", redS);
-        buttons.put("redO", redO);
-
-        return buttons;
-    }
-
-    private static Map<String, Label> InitializeLabels(){
-        Label gamemode = new Label("Game Mode: ");
-        Label bluePlayer = new Label("Blue Player: ");
-        Label redPlayer = new Label("Red Player: ");
-        Label currentTurn = new Label("Current Turn: ");
-        Label currentTurnBlue = new Label("Blue");
-        Label currentTurnRed = new Label("Red");
-        Label boardSize = new Label("Board Size: ");
-
-        Map<String, Label> labels = new HashMap<>();
-        labels.put("gamemode", gamemode);
-        labels.put("bluePlayer", bluePlayer);
-        labels.put("redPlayer", redPlayer);
-        labels.put("currentTurn", currentTurn);
-        labels.put("currentTurnBlue", currentTurnBlue);
-        labels.put("currentTurnRed", currentTurnRed);
-        labels.put("boardSize", boardSize);
-
-        return labels;
-    }
-
-    private static Map<String, HBox> InitializeHBoxes(){
-        //hbox for game mode selection radio buttons
-        HBox gameOptionsBox = new HBox(15);
-        gameOptionsBox.setPadding(new Insets(15));
-        gameOptionsBox.setAlignment(Pos.CENTER);
-
-        //holds the grid box and red and blue player piece choices boxes
-        HBox gameSpaceBox = new HBox(10);
-        gameSpaceBox.setAlignment(Pos.CENTER);
-
-        Map<String, HBox> hBoxes = new HashMap<>();
-        hBoxes.put("gameOptionsBox", gameOptionsBox);
-        hBoxes.put("gameSpaceBox", gameSpaceBox);
-
-        return hBoxes;
-    }
-
-    private static Map<String, VBox> InitializeVBoxes(){
-        //set up VBox that will act as container for all other HBoxes
-        VBox mainBox = new VBox(10);
-        mainBox.setPadding(new Insets(15));
-        mainBox.setStyle("-fx-border-color: black; -fx-border-width: 10px; -fx-border-style: solid;");  
-
-        VBox bluePlayerChoicesBox = new VBox(10);
-        bluePlayerChoicesBox.setPadding(new Insets(15));
-
-        VBox redPlayerChoicesBox = new VBox(10);
-        redPlayerChoicesBox.setPadding(new Insets(15));
-
-        VBox sosGridBox = new VBox(10);
-
-        Map<String, VBox> vBoxes = new HashMap<>();
-        vBoxes.put("mainBox", mainBox);
-        vBoxes.put("bluePlayerChoicesBox", bluePlayerChoicesBox);
-        vBoxes.put("redPlayerChoicesBox", redPlayerChoicesBox);
-        vBoxes.put("sosGridBox", sosGridBox);
-
-        return vBoxes;
-    }
-
-    private void FillHBoxes(){
-        vBoxes.get("mainBox").getChildren().add(hBoxes.get("gameOptionsBox"));
-
-        //add gamemode selection + board size buttons/input fields:
-        hBoxes.get("gameOptionsBox").getChildren().addAll(labels.get("gamemode"), buttons.get("simpleGamemode"), buttons.get("generalGamemode"), labels.get("boardSize"));
-
-        hBoxes.get("gameSpaceBox").getChildren().addAll();
+        vBoxes.mainBox.getChildren().add(hBoxes.playerTurnBox);
 
         //initialize unplayable grid for display purposes (fill with empty labels)
         int DEFAULT_GRID_SIZE = 5;
         GridPane placeholderGrid = InitializeGrid(DEFAULT_GRID_SIZE, index -> new Label(""));
+        vBoxes.sosGridBox.getChildren().add(placeholderGrid);
 
-        vBoxes.get("sosGridBox").getChildren().add(placeholderGrid);
-        hBoxes.get("gameSpaceBox").getChildren().addAll(vBoxes.get("redPlayerChoicesBox"), vBoxes.get("sosGridBox"), vBoxes.get("bluePlayerChoicesBox"));
-    }
-
-    private void FillVBoxes(){
-        vBoxes.get("redPlayerChoicesBox").getChildren().addAll(labels.get("redPlayer"), buttons.get("redS"), buttons.get("redO"));
-        vBoxes.get("bluePlayerChoicesBox").getChildren().addAll(labels.get("bluePlayer"), buttons.get("blueS"), buttons.get("blueO"));
-        vBoxes.get("mainBox").getChildren().add(hBoxes.get("gameSpaceBox"));
+        vBoxes.mainBox.getChildren().add(hBoxes.startBox);
     }
 
     private static <T extends Region> GridPane InitializeGrid(int gridSize, Function<Integer, T> componentFactory){
