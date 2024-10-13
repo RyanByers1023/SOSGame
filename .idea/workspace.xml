@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2a3e0a27-d800-449d-bc90-98cdecd99d00" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/BadCalculator.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/SOSGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/SOSGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/test/sos/ryanbyers/sosjavafx/BadCalculatorTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,27 +51,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.HelloApplication.executor": "Run",
-    "Application.SOSGUI.executor": "Run",
-    "JUnit.All in SOSJavaFX.executor": "Run",
-    "JUnit.test in SOSJavaFX.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "sprint2__0",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SOSGUI.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.All in SOSJavaFX.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.test in SOSJavaFX.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;sprint2__0&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.SOSGUI">
     <configuration name="SOSGUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="sos.ryanbyers.sosjavafx.SOSGUI" />
@@ -125,7 +123,8 @@
       <workItem from="1728760484502" duration="24000" />
       <workItem from="1728767350031" duration="331000" />
       <workItem from="1728768588922" duration="115000" />
-      <workItem from="1728768818837" duration="9852000" />
+      <workItem from="1728768818837" duration="10252000" />
+      <workItem from="1728849943612" duration="1808000" />
     </task>
     <servers />
   </component>

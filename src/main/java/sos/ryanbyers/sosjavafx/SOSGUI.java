@@ -3,11 +3,13 @@ package sos.ryanbyers.sosjavafx;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.util.function.Function;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +19,7 @@ public class SOSGUI extends Application  {
     //buttons, labels, etc. map naming convention:
     //keys are camelCase w/ special characters removed -- General Gamemode: --> generalGamemode, Gamemode --> gameMode, etc.
     private Map<String, RadioButton> buttons;
-    private Map<String, Label> labels; 
+    private Map<String, Label> labels;
     private Map<String, HBox> hBoxes;
     private Map<String, VBox> vBoxes;
 
@@ -25,26 +27,21 @@ public class SOSGUI extends Application  {
     public void start(Stage primaryStage) {
         InitializeUIElements();
 
-        //initialize unplayable grid for display purposes (fill with empty labels)
-        int DEFAULT_GRID_SIZE = 5;
-        GridPane placeholderGrid = IntializeGrid(DEFAULT_GRID_SIZE, index -> new Label(""));
 
-        vBoxes.get("sosGridBox").getChildren().add(placeholderGrid);
-        hBoxes.get("gameSpaceBox").getChildren().add(vBoxes.get("sosGridBox"));
 
-        DisplayWindow(scene, primaryStage, 640, 360);     
+        DisplayWindow(primaryStage, vBoxes.get("mainBox"), 360, 640);
     }
 
     private void InitializeUIElements(){
         buttons = InitializeButtons(); //buttonName, referenced button
         labels = InitializeLabels(); //labelName, referenced label
 
-        hBoxes = InitializeHBoxes(buttons, labels); //hbox, referenced hbox
-        vBoxes = InitializeVBoxes(buttons, labels); //vbox, referenced vbox
+        hBoxes = InitializeHBoxes(); //hbox, referenced hbox
+        vBoxes = InitializeVBoxes(); //vbox, referenced vbox
 
         //insert labels, buttons, hBoxes, vBoxes into boxes where necessary:
-        FillHBoxes(buttons, labels, hBoxes, vBoxes);
-        FillVBoxes(buttons, labels, hBoxes, vBoxes);
+        FillHBoxes();
+        FillVBoxes();
 
         //create spinner to allow for board size selection:
         //note: spinner doesn't allow for unique user input, invalid input tests are unneccessary
@@ -113,7 +110,7 @@ public class SOSGUI extends Application  {
         return labels;
     }
 
-    private static Map<String, HBox> InitializeHBoxes(Map<String, RadioButton> buttons, Map<String, Label> labels){
+    private static Map<String, HBox> InitializeHBoxes(){
         //hbox for game mode selection radio buttons
         HBox gameOptionsBox = new HBox(15);
         gameOptionsBox.setPadding(new Insets(15));
@@ -127,10 +124,10 @@ public class SOSGUI extends Application  {
         hBoxes.put("gameOptionsBox", gameOptionsBox);
         hBoxes.put("gameSpaceBox", gameSpaceBox);
 
-        return HBoxes;
+        return hBoxes;
     }
 
-    private static Map<String, VBox> InitializeVBoxes(Map<String, Button> buttons, Map<String, Labels> labels, Map<String, HBox> hBoxes){
+    private static Map<String, VBox> InitializeVBoxes(){
         //set up VBox that will act as container for all other HBoxes
         VBox mainBox = new VBox(10);
         mainBox.setPadding(new Insets(15));
@@ -153,43 +150,47 @@ public class SOSGUI extends Application  {
         return vBoxes;
     }
 
-    private void FillHBoxes(Map<String, Button> buttons, Map<String, Label> labels, Map<String, VBox> vBoxes){
-        vBox.get("mainBox").getChildren().add(hBoxes.get("gameOptionsBox"));
+    private void FillHBoxes(){
+        vBoxes.get("mainBox").getChildren().add(hBoxes.get("gameOptionsBox"));
 
         //add gamemode selection + board size buttons/input fields:
-        hBox.get("gameOptionsBox").getChildren().addAll(labels.get("gamemode"), buttons.get("simpleGamemode"), buttons.get("generalGamemode"), labels.get("boardSize"));
+        hBoxes.get("gameOptionsBox").getChildren().addAll(labels.get("gamemode"), buttons.get("simpleGamemode"), buttons.get("generalGamemode"), labels.get("boardSize"));
 
-        hBox.get("gameSpaceBox").getChildren().add(vBox.get("redPlayerChoicesBox"));
+        hBoxes.get("gameSpaceBox").getChildren().addAll();
+
+        //initialize unplayable grid for display purposes (fill with empty labels)
+        int DEFAULT_GRID_SIZE = 5;
+        GridPane placeholderGrid = InitializeGrid(DEFAULT_GRID_SIZE, index -> new Label(""));
+
+        vBoxes.get("sosGridBox").getChildren().add(placeholderGrid);
+        hBoxes.get("gameSpaceBox").getChildren().addAll(vBoxes.get("redPlayerChoicesBox"), vBoxes.get("sosGridBox"), vBoxes.get("bluePlayerChoicesBox"));
     }
 
-    private void FillVBoxes(Map<String, Button> buttons, Map<String, Label> labels, Map<String, HBox> hBoxes, Map<String, VBox> vBox){
+    private void FillVBoxes(){
         vBoxes.get("redPlayerChoicesBox").getChildren().addAll(labels.get("redPlayer"), buttons.get("redS"), buttons.get("redO"));
         vBoxes.get("bluePlayerChoicesBox").getChildren().addAll(labels.get("bluePlayer"), buttons.get("blueS"), buttons.get("blueO"));
-        vBoxes.get("gameSpaceBox").getChildren().add(bluePlayerChoicesBox);
-        vBoxes.get("mainBox").getChildren().add(vBoxes.get("gameSpaceBox");
+        vBoxes.get("mainBox").getChildren().add(hBoxes.get("gameSpaceBox"));
     }
 
-    private static gridPane InitializeGrid(int gridSize, Function<Integer, T> componentFactory){
+    private static <T extends Region> GridPane InitializeGrid(int gridSize, Function<Integer, T> componentFactory){
         //create sos grid cells (may be changed later but i'll set them now for initial display purposes):
-        GridPane grid = new Gridpane();
+        GridPane grid = new GridPane();
         grid.setPadding(new Insets(10));
         
         for(int row = 0; row < gridSize; ++row) {
             for(int col = 0; col < gridSize; ++col) {
                 T component = componentFactory.apply(row * gridSize + col);
-                Label cell = new Label(""); //leave empty for now as this is just a display, replace real grid with buttons
-                cell.setPrefSize(40, 40);
-                cell.setAlignment(Pos.CENTER);
-                cell.setStyle("-fx-border-color: black; -fx-background-color: white;");
-
-                grid.add(cell, col, row);
+                component.setStyle("-fx-border-color: black; -fx-border-width: 1px; -fx-background-color: white;");
+                component.setPrefSize(40, 40);
+                grid.add(component, col, row);
             }
         }
-
         return grid;
     }
 
-    private void DisplayWindow(Scene scene, Stage primaryStage, int windowHeight, int windowWidth){
+
+
+    private void DisplayWindow(Stage primaryStage, VBox mainBox, int windowHeight, int windowWidth){
         Scene scene = new Scene(mainBox, windowWidth, windowHeight);
 
         //set and show stage
