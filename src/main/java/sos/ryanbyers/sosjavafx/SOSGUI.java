@@ -40,7 +40,7 @@ public class SOSGUI extends Application  {
         labels = InitializeLabels(); //labelName, referenced label
 
         hBoxes = InitializeHBoxes(buttons, labels); //hbox, referenced hbox
-        vBoxes = InitializeVBoxes(buttons, labels, hBoxes); //vbox, referenced vbox
+        vBoxes = InitializeVBoxes(buttons, labels); //vbox, referenced vbox
 
         //insert labels, buttons, hBoxes, vBoxes into boxes where necessary:
         FillHBoxes(buttons, labels, hBoxes, vBoxes);
@@ -51,7 +51,7 @@ public class SOSGUI extends Application  {
         Spinner<Integer> boardSizeSpinner = new Spinner<>(3, 30, 5); //min: 3, max: 30, default: 5
         boardSizeSpinner.setPrefWidth(52); //this width can accomodate integers < 100 
 
-        hBoxes.get("gameOptions").getChildren().add(boardSizeSpinner);
+        hBoxes.get("gameOptionsBox").getChildren().add(boardSizeSpinner);
     }
 
     private static Map<String, RadioButton> InitializeButtons(){
@@ -115,16 +115,17 @@ public class SOSGUI extends Application  {
 
     private static Map<String, HBox> InitializeHBoxes(Map<String, RadioButton> buttons, Map<String, Label> labels){
         //hbox for game mode selection radio buttons
-        HBox gameOptions = new HBox(15);
-        gameOptions.setPadding(new Insets(15));
-        gameOptions.setAlignment(Pos.CENTER);
+        HBox gameOptionsBox = new HBox(15);
+        gameOptionsBox.setPadding(new Insets(15));
+        gameOptionsBox.setAlignment(Pos.CENTER);
 
-        //holds the grid and player piece choices
+        //holds the grid box and red and blue player piece choices boxes
         HBox gameSpaceBox = new HBox(10);
         gameSpaceBox.setAlignment(Pos.CENTER);
 
-        Map<String, HBox> HBoxes = new HashMap<>();
-        HBoxes.put("gameOptions", gameOptions);
+        Map<String, HBox> hBoxes = new HashMap<>();
+        hBoxes.put("gameOptionsBox", gameOptionsBox);
+        hBoxes.put("gameSpaceBox", gameSpaceBox);
 
         return HBoxes;
     }
@@ -138,30 +139,31 @@ public class SOSGUI extends Application  {
         VBox bluePlayerChoicesBox = new VBox(10);
         bluePlayerChoicesBox.setPadding(new Insets(15));
 
-        VBox redPlayerChoices = new VBox(10);
-        redPlayerChoices.setPadding(new Insets(15));
+        VBox redPlayerChoicesBox = new VBox(10);
+        redPlayerChoicesBox.setPadding(new Insets(15));
 
         VBox sosGridBox = new VBox(10);
 
         Map<String, VBox> vBoxes = new HashMap<>();
         vBoxes.put("mainBox", mainBox);
         vBoxes.put("bluePlayerChoicesBox", bluePlayerChoicesBox);
+        vBoxes.put("redPlayerChoicesBox", redPlayerChoicesBox);
         vBoxes.put("sosGridBox", sosGridBox);
 
         return vBoxes;
     }
 
     private void FillHBoxes(Map<String, Button> buttons, Map<String, Label> labels, Map<String, VBox> vBoxes){
-        vBox.get("mainBox").getChildren().add(hBoxes.get("gameOptions"));
+        vBox.get("mainBox").getChildren().add(hBoxes.get("gameOptionsBox"));
 
         //add gamemode selection + board size buttons/input fields:
-        hBox.get("gameOptions").getChildren().addAll(labels.get("gamemode"), buttons.get("simpleGamemode"), buttons.get("generalGamemode"), labels.get("boardSize"));
+        hBox.get("gameOptionsBox").getChildren().addAll(labels.get("gamemode"), buttons.get("simpleGamemode"), buttons.get("generalGamemode"), labels.get("boardSize"));
 
-        hBox.get("gameSpaceBox").getChildren().add(vBox.get("redPlayerChoices"));
+        hBox.get("gameSpaceBox").getChildren().add(vBox.get("redPlayerChoicesBox"));
     }
 
     private void FillVBoxes(Map<String, Button> buttons, Map<String, Label> labels, Map<String, HBox> hBoxes, Map<String, VBox> vBox){
-        vBoxes.get("redPlayerChoices").getChildren().addAll(labels.get("redPlayer"), buttons.get("redS"), buttons.get("redO"));
+        vBoxes.get("redPlayerChoicesBox").getChildren().addAll(labels.get("redPlayer"), buttons.get("redS"), buttons.get("redO"));
         vBoxes.get("bluePlayerChoicesBox").getChildren().addAll(labels.get("bluePlayer"), buttons.get("blueS"), buttons.get("blueO"));
         vBoxes.get("gameSpaceBox").getChildren().add(bluePlayerChoicesBox);
         vBoxes.get("mainBox").getChildren().add(vBoxes.get("gameSpaceBox");
