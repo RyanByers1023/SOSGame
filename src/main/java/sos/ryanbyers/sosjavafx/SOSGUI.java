@@ -14,50 +14,44 @@ import java.util.Map;
 
 public class SOSGUI extends Application  {
 
+    //buttons, labels, etc. map naming convention:
+    //keys are camelCase w/ special characters removed -- General Gamemode: --> generalGamemode, Gamemode --> gameMode, etc.
+    private Map<String, RadioButton> buttons;
+    private Map<String, Label> labels; 
+    private Map<String, HBox> hBoxes;
+    private Map<String, VBox> vBoxes;
+
     @Override
     public void start(Stage primaryStage) {
-        //buttonName, labelName, etc. map naming convention:
-        //keys are camelCase w/ special characters removed -- General Gamemode: --> generalGamemode, Gamemode --> gameMode, etc.
-        Map<String, RadioButton> buttons = InitializeButtons(); //buttonName, referenced button
-        Map<String, Label> labels = InitializeLabels(); //labelName, referenced label
+        InitializeUIElements();
 
-        Map<String, HBox> hBoxes = InitializeHBoxes(buttons, labels); //hbox, referenced hbox
-        Map<String, HBox> vBoxes = InitializeVBoxes(buttons, labels, hBoxes); //vbox, referenced vbox
+        //initialize unplayable grid for display purposes (fill with empty labels)
+        int DEFAULT_GRID_SIZE = 5;
+        GridPane placeholderGrid = IntializeGrid(DEFAULT_GRID_SIZE, index -> new Label(""));
 
-        //FIX-ME: implement these functions:
-        //FillHBoxes(buttons, labels, vBoxes)
-        //FillVBoxes(buttons, labels, hBoxes)
+        vBoxes.get("sosGridBox").getChildren().add(placeholderGrid);
+        hBoxes.get("gameSpaceBox").getChildren().add(vBoxes.get("sosGridBox"));
 
-        //FIX-ME: would like to incoporate this into one of the above functions for code readability
-        //maybe implement sepearate functions for intializations and assignment
-        vBoxes.get("gameSpaceBox").getChildren().add(bluePlayerChoicesBox);
+        DisplayWindow(scene, primaryStage, 640, 360);     
+    }
+
+    private void InitializeUIElements(){
+        buttons = InitializeButtons(); //buttonName, referenced button
+        labels = InitializeLabels(); //labelName, referenced label
+
+        hBoxes = InitializeHBoxes(buttons, labels); //hbox, referenced hbox
+        vBoxes = InitializeVBoxes(buttons, labels, hBoxes); //vbox, referenced vbox
+
+        //insert labels, buttons, hBoxes, vBoxes into boxes where necessary:
+        FillHBoxes(buttons, labels, hBoxes, vBoxes);
+        FillVBoxes(buttons, labels, hBoxes, vBoxes);
 
         //create spinner to allow for board size selection:
         //note: spinner doesn't allow for unique user input, invalid input tests are unneccessary
         Spinner<Integer> boardSizeSpinner = new Spinner<>(3, 30, 5); //min: 3, max: 30, default: 5
-        boardSizeSpinner.setPrefWidth(52); //this width can accomodate integers < 100       
+        boardSizeSpinner.setPrefWidth(52); //this width can accomodate integers < 100 
 
         hBoxes.get("gameOptions").getChildren().add(boardSizeSpinner);
-
-        //initialize unplayable grid for display purposes
-        int DEFAULT_GRID_SIZE = 5;
-        GridPane placeholderGrid = intializeGrid(DEFAULT_GRID_SIZE, index -> new Label(""));
-
-        vBoxes.get("sosGridBox").getChildren().add(placeholderGrid);
-
-        hBoxes.get("gameSpaceBox").getChildren().add(vBoxes.get("sosGridBox"));
-
-        gameSpace.getChildren().add(redPlayerChoices);
-
-        mainBox.getChildren().add(gameSpace);
-
-        //set scene at 720p
-        Scene scene = new Scene(mainBox, 550, 400);
-
-        //set and show stage
-        primaryStage.setTitle("SOS Game");
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 
     private static Map<String, RadioButton> InitializeButtons(){
@@ -78,7 +72,7 @@ public class SOSGUI extends Application  {
         blueS.setToggleGroup(bluePieceToggle);
         blueO.setToggleGroup(bluePieceToggle);
 
-        //Red player piece choice radio buttons
+        //Red player piece choice radio buttons 
         ToggleGroup redPieceToggle = new ToggleGroup();
         RadioButton redS = new RadioButton("S");
         RadioButton redO = new RadioButton("O");
@@ -162,11 +156,15 @@ public class SOSGUI extends Application  {
 
         //add gamemode selection + board size buttons/input fields:
         hBox.get("gameOptions").getChildren().addAll(labels.get("gamemode"), buttons.get("simpleGamemode"), buttons.get("generalGamemode"), labels.get("boardSize"));
+
+        hBox.get("gameSpaceBox").getChildren().add(vBox.get("redPlayerChoices"));
     }
 
     private void FillVBoxes(Map<String, Button> buttons, Map<String, Label> labels, Map<String, HBox> hBoxes, Map<String, VBox> vBox){
         vBoxes.get("redPlayerChoices").getChildren().addAll(labels.get("redPlayer"), buttons.get("redS"), buttons.get("redO"));
-        vBoxes.get("bluePlayerChoicesBox").getChildren().addAll(labels.get("bluePlayer"), buttons.get("blueS"), buttons.get("blueO")); MOVE THIS
+        vBoxes.get("bluePlayerChoicesBox").getChildren().addAll(labels.get("bluePlayer"), buttons.get("blueS"), buttons.get("blueO"));
+        vBoxes.get("gameSpaceBox").getChildren().add(bluePlayerChoicesBox);
+        vBoxes.get("mainBox").getChildren().add(vBoxes.get("gameSpaceBox");
     }
 
     private static gridPane InitializeGrid(int gridSize, Function<Integer, T> componentFactory){
@@ -187,6 +185,15 @@ public class SOSGUI extends Application  {
         }
 
         return grid;
+    }
+
+    private void DisplayWindow(Scene scene, Stage primaryStage, int windowHeight, int windowWidth){
+        Scene scene = new Scene(mainBox, windowWidth, windowHeight);
+
+        //set and show stage
+        primaryStage.setTitle("SOS Game");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
  
     public static void main(String[] args) {
