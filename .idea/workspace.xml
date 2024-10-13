@@ -5,6 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2a3e0a27-d800-449d-bc90-98cdecd99d00" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/ButtonHolder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/HBoxHolder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/LabelHolder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/VBoxHolder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/SOSGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/SOSGUI.java" afterDir="false" />
     </list>
@@ -124,7 +128,8 @@
       <workItem from="1728767350031" duration="331000" />
       <workItem from="1728768588922" duration="115000" />
       <workItem from="1728768818837" duration="10252000" />
-      <workItem from="1728849943612" duration="1808000" />
+      <workItem from="1728849943612" duration="7006000" />
+      <workItem from="1728860615600" duration="745000" />
     </task>
     <servers />
   </component>
