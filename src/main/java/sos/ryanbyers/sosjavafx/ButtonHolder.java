@@ -22,7 +22,10 @@ public class ButtonHolder {
     public ButtonHolder(){
         //gamemode radio buttons
         simpleGamemode = new RadioButton("Simple game");
+        simpleGamemode.setId("simpleGamemode");
+
         generalGamemode = new RadioButton("General game");
+        generalGamemode.setId("generalGamemode");
 
         //set correct group (gamemode group)
         ToggleGroup gamemodeToggle = new ToggleGroup();
@@ -31,7 +34,10 @@ public class ButtonHolder {
 
         //Blue player piece choice radio buttons
         blueS = new RadioButton("S");
+        blueS.setId("blueS");
+
         blueO = new RadioButton("O");
+        blueO.setId("blueO");
 
         //set correct group (bluePiece group)
         ToggleGroup bluePieceToggle = new ToggleGroup();
@@ -40,7 +46,10 @@ public class ButtonHolder {
 
         //Red player piece choice radio buttons
         redS = new RadioButton("S");
+        redS.setId("redS");
+
         redO = new RadioButton("O");
+        redO.setId("redO");
 
         //set correct group (redPiece group)
         ToggleGroup redPieceToggle = new ToggleGroup();
@@ -48,8 +57,10 @@ public class ButtonHolder {
         redO.setToggleGroup(redPieceToggle);
 
         startButton = new Button("Start Game");
+        startButton.setId("startButton");
 
         boardSizeSpinner = new Spinner<>(3, 30, 5); //min: 3, max: 30, default: 5
+        boardSizeSpinner.setId("boardSizeSpinner");
         boardSizeSpinner.setPrefWidth(52); //this width can accomodate integers < 100
     }
 }

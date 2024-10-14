@@ -3,12 +3,11 @@ package sos.ryanbyers.sosjavafx;
 import javafx.application.Application;
 
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class SOSGUI extends Application  {
-    private ButtonHolder buttons;
+    public ButtonHolder buttons;
     private LabelHolder labels;
     private HBoxHolder hBoxes;
     private VBoxHolder vBoxes;
