@@ -2,6 +2,7 @@ package sos.ryanbyers.sosjavafx;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.ToggleGroup;
 
 public class ButtonHolder {
@@ -15,6 +16,8 @@ public class ButtonHolder {
     public RadioButton redO;
 
     public Button startButton;
+
+    public Spinner<Integer> boardSizeSpinner;
 
     public ButtonHolder(){
         //gamemode radio buttons
@@ -45,5 +48,8 @@ public class ButtonHolder {
         redO.setToggleGroup(redPieceToggle);
 
         startButton = new Button("Start Game");
+
+        boardSizeSpinner = new Spinner<>(3, 30, 5); //min: 3, max: 30, default: 5
+        boardSizeSpinner.setPrefWidth(52); //this width can accomodate integers < 100
     }
 }
