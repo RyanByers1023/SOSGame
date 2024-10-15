@@ -1,8 +1,12 @@
-package sos.ryanbyers.sosjavafx;
+package sos.ryanbyers.input;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import sos.ryanbyers.gui.Board;
+import sos.ryanbyers.gui.ButtonHolder;
+import sos.ryanbyers.gui.LabelHolder;
+import sos.ryanbyers.gameLogic.TurnManager;
 
 public class ButtonListener {
     private ButtonHolder buttons;

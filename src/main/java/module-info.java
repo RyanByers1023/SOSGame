@@ -5,5 +5,10 @@ module sos.ryanbyers.sosjavafx {
 
 
     opens sos.ryanbyers.sosjavafx to javafx.fxml;
-    exports sos.ryanbyers.sosjavafx;
+    exports sos.ryanbyers.input;
+    opens sos.ryanbyers.input to javafx.fxml;
+    exports sos.ryanbyers.gameLogic;
+    opens sos.ryanbyers.gameLogic to javafx.fxml;
+    exports sos.ryanbyers.gui;
+    opens sos.ryanbyers.gui to javafx.fxml;
 }

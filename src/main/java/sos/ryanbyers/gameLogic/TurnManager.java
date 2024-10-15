@@ -1,4 +1,4 @@
-package sos.ryanbyers.sosjavafx;
+package sos.ryanbyers.gameLogic;
 
 import javafx.scene.control.Alert;
 

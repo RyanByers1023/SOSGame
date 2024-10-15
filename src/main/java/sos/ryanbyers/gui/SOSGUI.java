@@ -1,10 +1,11 @@
-package sos.ryanbyers.sosjavafx;
+package sos.ryanbyers.gui;
 
 import javafx.application.Application;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import sos.ryanbyers.input.ButtonListener;
 
 public class SOSGUI extends Application  {
     public ButtonHolder buttons;

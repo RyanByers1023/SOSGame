@@ -60,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>sos.ryanbyers.sosjavafx/sos.ryanbyers.sosjavafx.SOSGUI</mainClass>
+                            <mainClass>sos.ryanbyers.sosjavafx/sos.ryanbyers.gui.SOSGUI</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

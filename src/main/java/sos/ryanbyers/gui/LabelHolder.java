@@ -1,4 +1,4 @@
-package sos.ryanbyers.sosjavafx;
+package sos.ryanbyers.gui;
 
 import javafx.scene.control.Label;
 

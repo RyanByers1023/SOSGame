@@ -1,4 +1,4 @@
-package sos.ryanbyers.sosjavafx;
+package sos.ryanbyers.gui;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -10,8 +10,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
-import static java.time.chrono.JapaneseEra.values;
 
 public class Board {
     public GridPane grid;

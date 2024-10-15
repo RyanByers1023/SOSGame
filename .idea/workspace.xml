@@ -5,7 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2a3e0a27-d800-449d-bc90-98cdecd99d00" name="Changes" comment="minor: final refinements">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gameLogic/SOSGame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gameLogic/SOSGeneralGame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gameLogic/SOSSimpleGame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gui/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/BoardButtonListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/input/BoardButtonListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/ButtonHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gui/ButtonHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/ButtonListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/input/ButtonListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/HBoxHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gui/HBoxHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/LabelHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gui/LabelHolder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/SOSGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gui/SOSGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/TurnManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gameLogic/TurnManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/sosjavafx/VBoxHolder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sos/ryanbyers/gui/VBoxHolder.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,6 +30,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -78,11 +94,11 @@
 }</component>
   <component name="RunManager" selected="Application.SOSGUI">
     <configuration name="SOSGUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="sos.ryanbyers.sosjavafx.SOSGUI" />
+      <option name="MAIN_CLASS_NAME" value="sos.ryanbyers.gui.SOSGUI" />
       <module name="SOSJavaFX" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="sos.ryanbyers.sosjavafx.*" />
+          <option name="PATTERN" value="sos.ryanbyers.input.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
