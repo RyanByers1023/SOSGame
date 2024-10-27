@@ -63,7 +63,7 @@ public class SequenceScanner {
         for (int row = 0; row < board.componentGrid.size(); row++) {
             for (int col = 0; col < board.componentGrid.size(); col++) {
                 Region button = board.getCell(row, col);
-                //check for unoccupied cells -- indicative that the board is not full
+                //check for at least one unoccupied cell
                 if (!Objects.equals(button.getId(), "O") && !Objects.equals(button.getId(), "S")) {
                     return false;
                 }

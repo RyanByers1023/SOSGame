@@ -10,15 +10,16 @@ public class SOSGeneralGamemode extends SOSGamemode {
 
     @Override
     public void HandleTurn(){
-        //neither players turn?: game has not begun yet
+        //check if the game has begun yet:
         if(!turnManager.GameStarted()){
             turnManager.StartNewGame();
             return;
         }
-        //do not change turns when a sequence is made by either player or the game has ended
+        //do not change turns when a sequence is made by either player (general game rule) or the game has ended
         if(SequenceMade() || WinConditionMet()){
             return;
         }
+        //if none of the above are applicable, just change the turn to the other player
         turnManager.ChangeTurns();
 
     }
@@ -26,32 +27,34 @@ public class SOSGeneralGamemode extends SOSGamemode {
     @Override
     public boolean WinConditionMet(){
         if (SequenceMade()){
-            if(BoardFull()){ //game must now end
-                DisplayWinner();
-                return true;
-            }
             //iterate correct score based on whose turn it was
-            else{
-                if(turnManager.blueTurn){
-                    blueSequences++;
-                }
-                else{
-                    redSequences++;
-                }
-                return false;
+            if(turnManager.blueTurn){
+                blueSequences++;
             }
+            else{
+                redSequences++;
+            }
+            return false;
+        }
+        //condition to end the current game = the board has no more free spaces
+        if(BoardFull()){
+            return true;
         }
         return false;
     }
 
     @Override
-    public boolean StalemateConditionMet(){
+    public boolean StalemateCondition(){
         return BoardFull() && redSequences == blueSequences;
     }
 
     @Override
-    public boolean RedHasWon(){
+    public boolean RedVictoryCondition(){
         return redSequences > blueSequences;
+    }
+
+    @Override boolean BlueVictoryCondition(){
+        return blueSequences > redSequences;
     }
 
     @Override

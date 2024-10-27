@@ -13,6 +13,8 @@ public class SOSGUI  {
     public LabelHolder labels;
     public HBoxHolder hBoxes;
     public VBoxHolder vBoxes;
+    private InputValidator alert;
+    private ButtonListener buttonListener;
 
     public Board board;
 
@@ -27,6 +29,8 @@ public class SOSGUI  {
         labels = new LabelHolder();
         hBoxes = new HBoxHolder();
         vBoxes = new VBoxHolder();
+        alert = new InputValidator();
+        buttonListener = new ButtonLister(gui);
 
         int DEFAULT_BOARD_SIZE = 5;
         board = new Board(5, Board.ComponentType.LABEL);
@@ -64,6 +68,44 @@ public class SOSGUI  {
 
         vBoxes.mainBox.getChildren().add(hBoxes.startBox);
     }
+
+    //runs when a valid cell on the SOS board is pressed
+    private void ModifyButton(Button button, TurnManager turnManager){
+        //set appropriate team color for piece depending on whose turn it is:
+        String textColor = turnManager.blueTurn ? "blue" : "red";
+        button.setStyle("-fx-text-fill: " + textColor + "; -fx-font-weight: bold;");
+
+        //red's turn
+        if(turnManager.redTurn){
+            button.setText(buttons.redO.isSelected() ? "O" : "S");
+            button.setId(buttons.redO.isSelected() ? "O" : "S");
+        }
+        //blue's turn
+        else{
+            button.setText(buttons.blueO.isSelected() ? "O" : "S");
+            button.setId(buttons.blueO.isSelected() ? "O" : "S");
+        }
+
+        button.setDisable(true);
+        turnManager.ChangeTurns();
+        labels.turnIndicator.setText((turnManager.blueTurn) ? "Blue" : "Red");
+    }
+
+    private void HandleStartButton(){
+        if(!(buttons.simpleGamemode.isSelected() || buttons.generalGamemode.isSelected())){
+            alert.AlertNoGamemodeChosen();
+        }
+        else{
+        //remove previous board
+        sosGridBox.getChildren().remove(board.grid);
+        board = new Board(buttons.boardSizeSpinner.getValue(), Board.ComponentType.BUTTON);
+        //add new board
+        sosGridBox.getChildren().add(board.grid);
+        //reinitialize listeners:
+        buttonListener.AddCellListeners();
+    }
+    
+
 
     private void DisplayWindow(Stage primaryStage, int windowWidth, int windowHeight){
         Scene scene = new Scene(vBoxes.mainBox, windowWidth, windowHeight);

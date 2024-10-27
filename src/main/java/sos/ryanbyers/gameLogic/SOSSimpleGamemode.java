@@ -9,7 +9,7 @@ public class SOSSimpleGamemode extends SOSGamemode {
 
     @Override
     public boolean WinConditionMet(){
-        //add notice with regard to who won the game
+        DisplayWinner();
         return SequenceMade();
     }
 
