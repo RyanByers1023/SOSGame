@@ -1,27 +1,25 @@
 package sos.ryanbyers.gui;
 
-import javafx.application.Application;
-
 import javafx.scene.Scene;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import sos.ryanbyers.gameLogic.TurnManager;
 import sos.ryanbyers.input.ButtonListener;
 
-public class SOSGUI extends Application  {
+import java.awt.*;
+
+public class SOSGUI  {
     public ButtonHolder buttons;
-    private LabelHolder labels;
-    private HBoxHolder hBoxes;
-    private VBoxHolder vBoxes;
+    public LabelHolder labels;
+    public HBoxHolder hBoxes;
+    public VBoxHolder vBoxes;
 
-    private Board board;
+    public Board board;
 
-    private ButtonListener buttonListener;
-
-    @Override
-    public void start(Stage primaryStage) {
+    public SOSGUI(Stage primaryStage, int windowWidth, int windowHeight) {
         InitializeUIElements();
-        InitializeListeners();
-        DisplayWindow(primaryStage, vBoxes.mainBox, 720, 1280);
+
+        DisplayWindow(primaryStage, windowWidth, windowHeight);
     }
 
     private void InitializeUIElements(){
@@ -36,10 +34,6 @@ public class SOSGUI extends Application  {
         //insert labels, buttons, hBoxes, vBoxes into boxes where necessary:
         FillHBoxes();
         FillVBoxes();
-    }
-
-    private void InitializeListeners(){
-        buttonListener = new ButtonListener(buttons, labels, board, vBoxes.sosGridBox);
     }
 
     private void FillHBoxes(){
@@ -71,16 +65,12 @@ public class SOSGUI extends Application  {
         vBoxes.mainBox.getChildren().add(hBoxes.startBox);
     }
 
-    private void DisplayWindow(Stage primaryStage, VBox mainBox, int windowHeight, int windowWidth){
-        Scene scene = new Scene(mainBox, windowWidth, windowHeight);
+    private void DisplayWindow(Stage primaryStage, int windowWidth, int windowHeight){
+        Scene scene = new Scene(vBoxes.mainBox, windowWidth, windowHeight);
 
         //set and show stage
         primaryStage.setTitle("SOS Game");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
- 
-    public static void main(String[] args) {
-        launch(args);
     }
 }
