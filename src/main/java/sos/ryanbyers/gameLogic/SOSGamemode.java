@@ -5,8 +5,10 @@ import sos.ryanbyers.gui.Board;
 public abstract class SOSGamemode {
     //for determining who goes first/changing turns thereafter
     protected TurnManager turnManager;
+
     //for checking the board for new sequences after each turn
     protected SequenceScanner sequenceScanner;
+
     //the SOS board itself, containing all buttons and cells
     protected Board board;
 
@@ -18,7 +20,7 @@ public abstract class SOSGamemode {
     }
 
     //super methods:
-    //a sequence is a sequence, no difference in how they are made
+    //a sequence is a sequence, no difference between gamemodes
     protected boolean SequenceMade(){
         return sequenceScanner.SequenceCreated();
     }
@@ -38,12 +40,8 @@ public abstract class SOSGamemode {
 
     //red/blue victory determined by a point value within general games, no points in simple games
     public abstract boolean RedVictoryCondition();
-
     public abstract boolean BlueVictoryCondition();
 
     //stalemate determied by point values in general games, no points in simple games
     public abstract boolean StalemateCondition();
-
-    //the winner in a general game will have their points displayed, simple games cannot display this as they do not have any points
-    public abstract void DisplayWinner();
 }

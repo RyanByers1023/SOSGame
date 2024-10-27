@@ -8,8 +8,8 @@ public class SOSSimpleGamemode extends SOSGamemode {
     }
 
     @Override
-    public boolean WinConditionMet(){
-        DisplayWinner();
+    public boolean GameEndCondition(){
+        //game ends when the first sequence is made
         return SequenceMade();
     }
 
@@ -19,22 +19,7 @@ public class SOSSimpleGamemode extends SOSGamemode {
     }
 
     @Override
-    public boolean RedHasWon(){
-        return WinConditionMet() && turnManager.redTurn;
-    }
-
-    @Override
-    public void DisplayWinner(){
-        if(StalemateConditionMet()){
-
-        }
-        else if(RedHasWon()){
-
-        }
-        else{
-
-        }
-        //display who made a sequence (blue or red?)
-        //OR: display that a stalemate has been reached
+    public boolean RedVictoryCondition(){
+        return GameEndCondition() && turnManager.redTurn;
     }
 }

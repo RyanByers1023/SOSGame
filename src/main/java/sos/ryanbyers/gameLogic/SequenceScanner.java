@@ -6,6 +6,8 @@ import sos.ryanbyers.gui.Board;
 
 import java.util.Objects;
 
+//TO-DO: improve performance: only check for new sos sequences around the area in which a new piece was placed
+//avoids whole board check each turn
 public class SequenceScanner {
     private Board board;
 

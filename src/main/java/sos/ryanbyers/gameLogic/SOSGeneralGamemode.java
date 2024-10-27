@@ -25,26 +25,14 @@ public class SOSGeneralGamemode extends SOSGamemode {
     }
 
     @Override
-    public boolean WinConditionMet(){
-        if (SequenceMade()){
-            //iterate correct score based on whose turn it was
-            if(turnManager.blueTurn){
-                blueSequences++;
-            }
-            else{
-                redSequences++;
-            }
-            return false;
-        }
+    public boolean GameEndCondition(){
         //condition to end the current game = the board has no more free spaces
-        if(BoardFull()){
-            return true;
-        }
-        return false;
+        return BoardFull();
     }
 
     @Override
     public boolean StalemateCondition(){
+        //WinConditionMet + redSequences == blueSequences
         return BoardFull() && redSequences == blueSequences;
     }
 
@@ -55,24 +43,5 @@ public class SOSGeneralGamemode extends SOSGamemode {
 
     @Override boolean BlueVictoryCondition(){
         return blueSequences > redSequences;
-    }
-
-    @Override
-    public void DisplayWinner(){
-        //draw
-        if(StalemateConditionMet()){
-
-        }
-        //red victory
-        else if(RedHasWon()){
-
-        }
-        //blue victory
-        else{
-
-        }
-        //display # of sequences made by each player
-        //display who won (blue or red?)
-        //OR: display that a stalemate has been reached
     }
 }
