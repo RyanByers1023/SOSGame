@@ -8,14 +8,8 @@ import java.util.Objects;
 //TO-DO: improve performance: only check for new sos sequences around the area in which a new piece was placed
 //avoids whole board check each turn
 public class SequenceScanner {
-    private Board board;
-
-    public SequenceScanner(Board board) {
-        this.board = board;
-    }
-
     //run after every move made
-    public boolean SequenceSearch(){
+    public boolean SequenceSearch(Board board){
         System.out.println("SequenceSearch called.");
         for (int row = 0; row < board.componentGrid.size(); row++) {
             for (int col = 0; col < board.componentGrid.size(); col++) {
@@ -24,14 +18,14 @@ public class SequenceScanner {
                 //"O" must be in the middle of a valid SOS sequence, best to only start a search from there:
                 if (Objects.equals(button.getId(), "O")) {
                     //check 1 unit in all directions from position of cell for an "S"
-                    if (checkDirection(row, col, -1, 0) || //up
-                            checkDirection(row, col, 1, 0) ||  //down
-                            checkDirection(row, col, 0, -1) || //left
-                            checkDirection(row, col, 0, 1) ||  //right
-                            checkDirection(row, col, -1, -1) || //up-Left Diagonal
-                            checkDirection(row, col, -1, 1) ||  //up-Right Diagonal
-                            checkDirection(row, col, 1, -1) ||  //down-Left Diagonal
-                            checkDirection(row, col, 1, 1)) {   //down-Right Diagonal
+                    if (checkDirection(board, row, col, -1, 0) || //up
+                            checkDirection(board, row, col, 1, 0) ||  //down
+                            checkDirection(board, row, col, 0, -1) || //left
+                            checkDirection(board, row, col, 0, 1) ||  //right
+                            checkDirection(board, row, col, -1, -1) || //up-Left Diagonal
+                            checkDirection(board, row, col, -1, 1) ||  //up-Right Diagonal
+                            checkDirection(board, row, col, 1, -1) ||  //down-Left Diagonal
+                            checkDirection(board, row, col, 1, 1)) {   //down-Right Diagonal
                         return true;
                     }
                 }
@@ -41,7 +35,7 @@ public class SequenceScanner {
     }
 
     //found an "SO" or an "OS". need to check if there exists another "S" to complete the sequence:
-    private boolean checkDirection(int row, int col, int rowDir, int colDir) {
+    private boolean checkDirection(Board board, int row, int col, int rowDir, int colDir) {
         //calculate positions of the surrounding 'S' cells for "SOS"
         int startRow = row + rowDir;
         int startCol = col + colDir;
@@ -57,11 +51,11 @@ public class SequenceScanner {
         return false;
     }
 
-    private boolean isInBounds(int row, int col) {
+    private boolean isInBounds(Board board, int row, int col) {
         return row >= 0 && row < board.componentGrid.size() && col >= 0 && col < board.componentGrid.size();
     }
 
-    public boolean BoardFull(){
+    public boolean BoardFull(Board board){
         for (int row = 0; row < board.componentGrid.size(); row++) {
             for (int col = 0; col < board.componentGrid.size(); col++) {
                 Region button = board.getCell(row, col);

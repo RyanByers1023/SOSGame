@@ -6,7 +6,7 @@ public class SOSGeneralGamemode extends SOSGamemode {
     private int redSequences = 0;
     private int blueSequences = 0;
 
-    public SOSGeneralGamemode(Board board, TurnManager turnManager) { super(board, turnManager); }
+    public SOSGeneralGamemode(TurnManager turnManager) { super(turnManager); }
 
     //run after each turn:
     @Override
@@ -21,8 +21,8 @@ public class SOSGeneralGamemode extends SOSGamemode {
     }
 
     @Override
-    public boolean StalemateCondition(){
-        if(BoardFull() && redSequences == blueSequences){
+    public boolean StalemateCondition(Board board){
+        if(BoardFull(board) && redSequences == blueSequences){
             alert.NotifyGeneralStalemate(redSequences);
             return true;
         }
@@ -31,8 +31,8 @@ public class SOSGeneralGamemode extends SOSGamemode {
     }
 
     @Override
-    public boolean RedVictoryCondition(){
-        if(BoardFull() && redSequences > blueSequences){
+    public boolean RedVictoryCondition(Board){
+        if(BoardFull(board) && redSequences > blueSequences){
             alert.NotifyGeneralRedVictory(redSequences, blueSequences);
             return true;
         }
@@ -40,8 +40,8 @@ public class SOSGeneralGamemode extends SOSGamemode {
     }
 
     @Override
-    public boolean BlueVictoryCondition(){
-        if(BoardFull() && redSequences < blueSequences){
+    public boolean BlueVictoryCondition(Board board){
+        if(BoardFull(board) && redSequences < blueSequences){
             alert.NotifyGeneralBlueVictory(redSequences, blueSequences);
             return true;
         }
@@ -56,12 +56,5 @@ public class SOSGeneralGamemode extends SOSGamemode {
         else{
             blueSequences++;
         }
-    }
-
-    @Override
-    public void ResetGame(){
-        redSequences = 0;
-        blueSequences = 0;
-
     }
 }

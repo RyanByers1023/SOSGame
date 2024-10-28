@@ -13,7 +13,6 @@ import java.util.List;
 public class ButtonListener {
     private SOSGUI gui;
     private Alert alert;
-    private SOSGamemode gameLogicManager;
 
     public ButtonListener(SOSGUI gui, TurnManager turnManager) {
         this.gui = gui;
@@ -22,7 +21,7 @@ public class ButtonListener {
         AttachStartButtonListener(turnManager);
     }
 
-    private void AttachCellListeners(TurnManager turnManager) {
+    private void AttachCellListeners(TurnManager turnManager, Game) {
         for(List<Region> row : gui.board.componentGrid){
             for(Region component : row){
                 if (component instanceof Button button) {

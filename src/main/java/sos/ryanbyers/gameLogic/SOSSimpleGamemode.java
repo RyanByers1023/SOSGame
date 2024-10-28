@@ -3,19 +3,18 @@ package sos.ryanbyers.gameLogic;
 import sos.ryanbyers.gui.Board;
 
 public class SOSSimpleGamemode extends SOSGamemode {
-    public SOSSimpleGamemode(Board board , TurnManager turnManager) {
-        super(board, turnManager);
+    public SOSSimpleGamemode(TurnManager turnManager) {
+        super(turnManager);
     }
-    private boolean sequenceFound = false;
 
     //runs each turn: (run when a piece is placed)
     @Override
-    public void HandleTurn(){
-        if(SequenceMade()){
+    public void HandleTurn(Board board){
+        if(SequenceMade(board)){
             HandleSequenceFound();
             return;
         }
-        if(BoardFull()){
+        if(BoardFull(board)){
             StalemateCondition();
             return;
         }
@@ -23,8 +22,8 @@ public class SOSSimpleGamemode extends SOSGamemode {
     }
 
     @Override
-    public boolean StalemateCondition(){
-        if(BoardFull()){
+    public boolean StalemateCondition(Board board){
+        if(BoardFull(board)){
             alert.NotifySimpleStalemate();
             return true;
         }
@@ -33,8 +32,8 @@ public class SOSSimpleGamemode extends SOSGamemode {
 
     //run after a sequence has been made:
     @Override
-    public boolean RedVictoryCondition(){
-        if(SequenceMade() && turnManager.redTurn){
+    public boolean RedVictoryCondition(TurnManager turnManager, Board board){
+        if(SequenceMade(board) && turnManager.redTurn){
             alert.NotifySimpleRedVictory();
             return true;
         }
@@ -43,7 +42,7 @@ public class SOSSimpleGamemode extends SOSGamemode {
 
     //run after a sequence has been made:
     @Override
-    public boolean BlueVictoryCondition(){
+    public boolean BlueVictoryCondition(TurnManager turnManager))
         if(sequenceFound && turnManager.blueTurn){
             alert.NotifySimpleBlueVictory();
             return true;
@@ -54,17 +53,11 @@ public class SOSSimpleGamemode extends SOSGamemode {
     //run when a sequence is found
     @Override
     public void HandleSequenceFound(){
-        sequenceFound = true;
         if(turnManager.redTurn){
             RedVictoryCondition();
         }
         else{
             BlueVictoryCondition();
         }
-    }
-
-    @Override
-    public void ResetGame(){
-
     }
 }
