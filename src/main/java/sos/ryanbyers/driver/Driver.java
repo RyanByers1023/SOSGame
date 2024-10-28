@@ -14,6 +14,8 @@ public class Driver extends Application {
     public void start(Stage primaryStage) {
         //initialize user interface
         SOSGUI gui = new SOSGUI(primaryStage, 1280, 720);
+        //gui initializes:
+        //
         TurnManager turnManager = new TurnManager();
 
         //set up listeners:

@@ -21,7 +21,7 @@ public class ButtonListener {
         AttachStartButtonListener(turnManager);
     }
 
-    private void AttachCellListeners(TurnManager turnManager, Game) {
+    private void AttachCellListeners(TurnManager turnManager, SOSGamemode gameLogicManager) {
         for(List<Region> row : gui.board.componentGrid){
             for(Region component : row){
                 if (component instanceof Button button) {
@@ -64,8 +64,8 @@ public class ButtonListener {
             }
 
             gameLogicManager = gui.buttons.generalGamemode.isSelected()
-                    ? new SOSGeneralGamemode(gui.board, turnManager)
-                    : new SOSSimpleGamemode(gui.board, turnManager);
+                    ? new SOSGeneralGamemode()
+                    : new SOSSimpleGamemode();
 
             gui.ResetBoard();
 

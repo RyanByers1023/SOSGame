@@ -10,7 +10,7 @@ public class SOSGeneralGamemode extends SOSGamemode {
 
     //run after each turn:
     @Override
-    public void HandleTurn(){
+    public void HandleTurn(Board board, TurnManager turnManager){
         //do not change turns when a sequence is made by either player (general game rule) or the game has ended
         if(SequenceMade()){
             HandleSequenceFound();
@@ -20,36 +20,26 @@ public class SOSGeneralGamemode extends SOSGamemode {
         turnManager.ChangeTurns();
     }
 
+    //handle when a stalemate is reached:
     @Override
-    public boolean StalemateCondition(Board board){
-        if(BoardFull(board) && redSequences == blueSequences){
-            alert.NotifyGeneralStalemate(redSequences);
-            return true;
-        }
-        return false;
+    public void HandleStalemate(){
+        alert.NotifyGeneralStalemate();
+    }
 
+    //handle when a red victory occurs
+    @Override
+    public void HandleRedVictory(){
+        alert.NotifyGeneralRedVictory();
+    }
+
+    //handle the case in hwihc  the blue player wins
+    @Override
+    public void HandleBlueVictory(){
+        alert.NotifyGeneralBlueVictory();
     }
 
     @Override
-    public boolean RedVictoryCondition(Board){
-        if(BoardFull(board) && redSequences > blueSequences){
-            alert.NotifyGeneralRedVictory(redSequences, blueSequences);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean BlueVictoryCondition(Board board){
-        if(BoardFull(board) && redSequences < blueSequences){
-            alert.NotifyGeneralBlueVictory(redSequences, blueSequences);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void HandleSequenceFound(){
+    public void HandleSequenceFound(TurnManager turnManager){
         if(turnManager.redTurn){
             redSequences++;
         }
