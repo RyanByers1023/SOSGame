@@ -1,28 +1,31 @@
 package sos.ryanbyers.gameLogic;
 
 import sos.ryanbyers.gui.Board;
+import sos.ryanbyers.input.Alert;
 
 public abstract class SOSGamemode {
     //for determining who goes first/changing turns thereafter
-    protected TurnManager turnManager;
+    public TurnManager turnManager;
 
     //for checking the board for new sequences after each turn
-    protected SequenceScanner sequenceScanner;
+    public SequenceScanner sequenceScanner;
 
     //the SOS board itself, containing all buttons and cells
     protected Board board;
+    protected Alert alert;
 
     //super constructor:
-    public SOSGamemode(Board board) {
+    public SOSGamemode(Board board, TurnManager turnManager) {
         this.board = board;
-        turnManager = new TurnManager();
+        this.turnManager = turnManager;
+        this.alert = new Alert();
         sequenceScanner = new SequenceScanner(board);
     }
 
     //super methods:
     //a sequence is a sequence, no difference between gamemodes
     protected boolean SequenceMade(){
-        return sequenceScanner.SequenceCreated();
+        return sequenceScanner.SequenceSearch();
     }
 
     //the board being full is a condition that can occur both in general and simple games
@@ -34,14 +37,15 @@ public abstract class SOSGamemode {
 
     //turns handled slightly different in general vs simple
     public abstract void HandleTurn();
-       
-    //end game condition is different for general vs simple game
-    public abstract boolean GameEndCondition();
 
     //red/blue victory determined by a point value within general games, no points in simple games
     public abstract boolean RedVictoryCondition();
     public abstract boolean BlueVictoryCondition();
 
-    //stalemate determied by point values in general games, no points in simple games
+    //stalemate determined by point values in general games, no points in simple games
     public abstract boolean StalemateCondition();
+
+    public abstract void HandleSequenceFound();
+
+    public abstract void ResetGame();
 }

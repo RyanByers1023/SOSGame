@@ -1,6 +1,5 @@
 package sos.ryanbyers.gameLogic;
 
-import javafx.scene.control.Button;
 import javafx.scene.layout.Region;
 import sos.ryanbyers.gui.Board;
 
@@ -16,7 +15,8 @@ public class SequenceScanner {
     }
 
     //run after every move made
-    public boolean SequenceCreated(){
+    public boolean SequenceSearch(){
+        System.out.println("SequenceSearch called.");
         for (int row = 0; row < board.componentGrid.size(); row++) {
             for (int col = 0; col < board.componentGrid.size(); col++) {
                 // If an "O" is present, check for all possible valid "SOS" sequences

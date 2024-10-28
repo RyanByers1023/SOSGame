@@ -3,18 +3,17 @@ package sos.ryanbyers.gui;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import sos.ryanbyers.gameLogic.SOSGamemode;
 import sos.ryanbyers.gameLogic.TurnManager;
 import sos.ryanbyers.input.ButtonListener;
-
-import java.awt.*;
+import sos.ryanbyers.input.Alert;
 
 public class SOSGUI  {
     public ButtonHolder buttons;
     public LabelHolder labels;
     public HBoxHolder hBoxes;
     public VBoxHolder vBoxes;
-    private InputValidator alert;
-    private ButtonListener buttonListener;
+    private Alert alert;
 
     public Board board;
 
@@ -29,8 +28,7 @@ public class SOSGUI  {
         labels = new LabelHolder();
         hBoxes = new HBoxHolder();
         vBoxes = new VBoxHolder();
-        alert = new InputValidator();
-        buttonListener = new ButtonLister(gui);
+        alert = new Alert();
 
         int DEFAULT_BOARD_SIZE = 5;
         board = new Board(5, Board.ComponentType.LABEL);
@@ -70,7 +68,7 @@ public class SOSGUI  {
     }
 
     //runs when a valid cell on the SOS board is pressed
-    private void ModifyButton(Button button, TurnManager turnManager){
+    public void ModifyButton(Button button, TurnManager turnManager){
         //set appropriate team color for piece depending on whose turn it is:
         String textColor = turnManager.blueTurn ? "blue" : "red";
         button.setStyle("-fx-text-fill: " + textColor + "; -fx-font-weight: bold;");
@@ -87,25 +85,20 @@ public class SOSGUI  {
         }
 
         button.setDisable(true);
-        turnManager.ChangeTurns();
         labels.turnIndicator.setText((turnManager.blueTurn) ? "Blue" : "Red");
     }
 
-    private void HandleStartButton(){
-        if(!(buttons.simpleGamemode.isSelected() || buttons.generalGamemode.isSelected())){
-            alert.AlertNoGamemodeChosen();
-        }
-        else{
-        //remove previous board
-        sosGridBox.getChildren().remove(board.grid);
-        board = new Board(buttons.boardSizeSpinner.getValue(), Board.ComponentType.BUTTON);
-        //add new board
-        sosGridBox.getChildren().add(board.grid);
-        //reinitialize listeners:
-        buttonListener.AddCellListeners();
-    }
-    
+    public void ResetBoard() {
+        vBoxes.sosGridBox.getChildren().remove(board.grid);
 
+        int gridSize = buttons.boardSizeSpinner.getValue();
+        board = new Board(gridSize, Board.ComponentType.BUTTON);
+        vBoxes.sosGridBox.getChildren().add(board.grid);
+    }
+
+    public void UpdateTurnIndicator(TurnManager turnManager){
+        labels.turnIndicator.setText(turnManager.blueTurn ? "Blue" : "Red");
+    }
 
     private void DisplayWindow(Stage primaryStage, int windowWidth, int windowHeight){
         Scene scene = new Scene(vBoxes.mainBox, windowWidth, windowHeight);

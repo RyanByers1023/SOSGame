@@ -7,27 +7,18 @@ import java.util.Random;
 public class TurnManager {
     public boolean blueTurn;
     public boolean redTurn;
-    private Random random;
-    private boolean gameStarted;
+    private final Random random;
 
     public TurnManager(){
         random = new Random();
         blueTurn = random.nextBoolean();
-        gameStarted = false;
+        redTurn = !blueTurn;
     }
 
     public void StartNewGame(){
-        gameStarted = true;
         blueTurn = random.nextBoolean();
+        redTurn = !blueTurn;
         AnnounceFirstTurn();
-    }
-
-    public void EndGame(){
-        gameStarted = false;
-    }
-
-    public boolean GameStarted(){
-        return gameStarted;
     }
 
     private void AnnounceFirstTurn(){
@@ -40,7 +31,6 @@ public class TurnManager {
             alert.showAndWait();
         }
         else{
-            blueTurn = false;
             redTurn = true;
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Red goes first!");
