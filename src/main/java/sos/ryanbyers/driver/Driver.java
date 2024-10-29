@@ -14,12 +14,12 @@ public class Driver extends Application {
     public void start(Stage primaryStage) {
         //initialize user interface
         SOSGUI gui = new SOSGUI(primaryStage, 1280, 720);
-        //gui initializes:
-        //
+        //gui is the only object allowed to instantiate the board
+
         TurnManager turnManager = new TurnManager();
 
         //set up listeners:
-        buttonListener = new ButtonListener(gui, turnManager);
+        buttonListener = new ButtonListener();
 
     }
 

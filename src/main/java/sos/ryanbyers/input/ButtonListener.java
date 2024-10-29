@@ -11,25 +11,19 @@ import sos.ryanbyers.gui.SOSGUI;
 import java.util.List;
 
 public class ButtonListener {
-    private SOSGUI gui;
     private Alert alert;
 
-    public ButtonListener(SOSGUI gui, TurnManager turnManager) {
-        this.gui = gui;
+    public ButtonListener(TurnManager turnManager, SOSGamemode gameLogicManager, SOSGUI gui) {
         this.alert = new Alert();
 
-        AttachStartButtonListener(turnManager);
+        AttachStartButtonListener(turnManager, gui, gameLogicManager);
     }
 
-    private void AttachCellListeners(TurnManager turnManager, SOSGamemode gameLogicManager) {
+    private void AttachCellListeners(TurnManager turnManager, SOSGamemode gameLogicManager, SOSGUI gui) {
         for(List<Region> row : gui.board.componentGrid){
             for(Region component : row){
                 if (component instanceof Button button) {
                     button.setOnAction(event -> {
-                        //celar previous event handlers
-                        button.setOnAction(null);
-                        System.out.println("Button clicked at position: " + button.getText());
-
                         boolean isRedTurn = turnManager.redTurn;
                         boolean pieceSelected = isRedTurn ?
                                 (gui.buttons.redO.isSelected() || gui.buttons.redS.isSelected()) :
@@ -42,12 +36,6 @@ public class ButtonListener {
 
                         gui.ModifyButton(button, turnManager);
 
-                        if (gameLogicManager.sequenceScanner.SequenceSearch()) {
-                            System.out.println("Sequence formed.");
-                            gameLogicManager.HandleSequenceFound();
-                        }
-
-                        CheckGameEndConditions();
                         gameLogicManager.HandleTurn();
                         gui.UpdateTurnIndicator(turnManager);
                     });
@@ -56,7 +44,7 @@ public class ButtonListener {
         }
     }
 
-    private void AttachStartButtonListener(TurnManager turnManager) {
+    private void AttachStartButtonListener(TurnManager turnManager, SOSGamemode gameLogicManager, SOSGUI gui) {
         gui.buttons.startButton.setOnAction(event -> {
             if (!(gui.buttons.simpleGamemode.isSelected() || gui.buttons.generalGamemode.isSelected())) {
                 alert.AlertNoGamemodeChosen();
@@ -69,7 +57,7 @@ public class ButtonListener {
 
             gui.ResetBoard();
 
-            AttachCellListeners(turnManager);
+            AttachCellListeners(turnManager, gameLogicManager, gui);
 
             turnManager.StartNewGame();
             gui.UpdateTurnIndicator(turnManager);
@@ -77,17 +65,15 @@ public class ButtonListener {
         });
     }
 
-    private void CheckGameEndConditions() {
+    private void CheckGameEndConditions(SOSGUI gui, SOSGamemode gameLogicManager) {
         if (gameLogicManager.StalemateCondition() ||
                 gameLogicManager.RedVictoryCondition() ||
                 gameLogicManager.BlueVictoryCondition()) {
-            DisableCellListeners();
-            gui.ResetBoard();
-            gameLogicManager.ResetGame();
+            
         }
     }
 
-    private void DisableCellListeners() {
+    private void DisableCellListeners(SOSGUI gui) {
         for (List<Region> row : gui.board.componentGrid) {
             for (Region component : row) {
                 if (component instanceof Button button) {

@@ -8,7 +8,7 @@ public class SOSGeneralGamemode extends SOSGamemode {
 
     public SOSGeneralGamemode(TurnManager turnManager) { super(turnManager); }
 
-    //run after each turn:
+    //run after a piece is placed:
     @Override
     public void HandleTurn(Board board, TurnManager turnManager){
         //do not change turns when a sequence is made by either player (general game rule) or the game has ended
@@ -22,14 +22,20 @@ public class SOSGeneralGamemode extends SOSGamemode {
 
     //handle when a stalemate is reached:
     @Override
-    public void HandleStalemate(){
+    public void HandleStalemate(SOSGUI gui){
         alert.NotifyGeneralStalemate();
+        //stop the user from inputting further... (this will be the same for the rest of the methods)
+        gui.ResetBoard();
+        ResetGame();
     }
 
     //handle when a red victory occurs
     @Override
     public void HandleRedVictory(){
         alert.NotifyGeneralRedVictory();
+        //prevent user input
+        gui.ResetBoard();
+        ResetGame();
     }
 
     //handle the case in hwihc  the blue player wins

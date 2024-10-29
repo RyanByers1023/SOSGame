@@ -24,13 +24,14 @@ public class SOSSimpleGamemode extends SOSGamemode {
     //handle when a stalemate is reached:
     @Override
     public void HandleStalemate(){
-            alert.NotifySimpleStalemate();
+        alert.NotifySimpleStalemate();
     }
 
     //handle when a red victory occurs
     @Override
-    public void HandleRedVictory(){
+    public void HandleRedVictory(Board board, TurnManager turnManager){
         alert.NotifySimpleRedVictory();
+
     }
 
     //handle when the blue player wins
