@@ -29,11 +29,11 @@ public abstract class SOSGamemode {
     public abstract void HandleTurn(Board board, TurnManager turnManager);
 
     //red/blue victory determined by a point value within general games, no points in simple games
-    public abstract boolean HandleRedVictory();
-    public abstract boolean HandleBlueVictory();
+    public abstract boolean HandleRedVictory(SOSGUI gui);
+    public abstract boolean HandleBlueVictory(SOSGUI gui);
 
     //stalemate determined by point values in general games, no points in simple games
-    public abstract boolean HandleStalemate();
+    public abstract boolean HandleStalemate(SOSGUI gui);
 
     public abstract void HandleSequenceFound(TurnManager turnManager);
 }
