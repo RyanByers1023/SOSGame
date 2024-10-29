@@ -15,7 +15,7 @@ public class SOSSimpleGamemode extends SOSGamemode {
             return;
         }
         if(BoardFull(board)){
-            StalemateCondition();
+            HandleStalemate();
             return;
         }
         turnManager.ChangeTurns();
@@ -23,21 +23,30 @@ public class SOSSimpleGamemode extends SOSGamemode {
 
     //handle when a stalemate is reached:
     @Override
-    public void HandleStalemate(){
+    public void HandleStalemate(SOSGUI gui){
         alert.NotifySimpleStalemate();
+        //stop user input
+        gui.ResetBoard();
+        ResetGame();
     }
 
     //handle when a red victory occurs
     @Override
-    public void HandleRedVictory(Board board, TurnManager turnManager){
+    public void HandleRedVictory(SOSGUI gui){
         alert.NotifySimpleRedVictory();
+        //stop user input
+        gui.ResetBoard();
+        ResetGame();
 
     }
 
     //handle when the blue player wins
     @Override
-    public void HandleBlueVictory(){
+    public void HandleBlueVictory(SOSGUI gui){
         alert.NotifySimpleBlueVictory();
+        //stop user input
+        gui.ResetBoard();
+        ResetGame();
     }
 
     //handle the case in which a sequence is found to have been made on the board
@@ -49,5 +58,10 @@ public class SOSSimpleGamemode extends SOSGamemode {
         else{
             BlueVictoryCondition();
         }
+    }
+
+    @Override
+    public void ResetGame(){
+        //nothing to be done here?
     }
 }

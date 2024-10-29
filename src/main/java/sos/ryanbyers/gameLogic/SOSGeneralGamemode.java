@@ -31,8 +31,8 @@ public class SOSGeneralGamemode extends SOSGamemode {
 
     //handle when a red victory occurs
     @Override
-    public void HandleRedVictory(){
-        alert.NotifyGeneralRedVictory();
+    public void HandleRedVictory(SOSGUI gui){
+        alert.NotifyGeneralRedVictory(redSequences, blueSequences);
         //prevent user input
         gui.ResetBoard();
         ResetGame();
@@ -40,8 +40,11 @@ public class SOSGeneralGamemode extends SOSGamemode {
 
     //handle the case in hwihc  the blue player wins
     @Override
-    public void HandleBlueVictory(){
+    public void HandleBlueVictory(SOSGUI gui){
         alert.NotifyGeneralBlueVictory();
+        //stop user input
+        gui.ResetBoard();
+        ResetGame();
     }
 
     @Override
@@ -52,5 +55,11 @@ public class SOSGeneralGamemode extends SOSGamemode {
         else{
             blueSequences++;
         }
+    }
+
+    @Override
+    public void ResetGame(){
+        redSequences = 0;
+        blueSequences = 0;
     }
 }
