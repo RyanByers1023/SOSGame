@@ -1,7 +1,6 @@
 package sos.ryanbyers.gameLogic;
 
 import javafx.scene.control.Alert;
-
 import java.util.Random;
 
 public class TurnManager {

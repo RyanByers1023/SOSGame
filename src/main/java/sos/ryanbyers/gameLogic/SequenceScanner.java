@@ -1,57 +1,107 @@
 package sos.ryanbyers.gameLogic;
 
 import javafx.scene.layout.Region;
+import javafx.util.Pair;
 import sos.ryanbyers.gui.Board;
+import sos.ryanbyers.gui.SOSGUI;
+import sos.ryanbyers.gui.SequenceCoordinates;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import java.util.Objects;
 
-//TO-DO: improve performance: only check for new sos sequences around the area in which a new piece was placed
-//avoids whole board check each turn
 public class SequenceScanner {
     //run after every move made
-    public boolean SequenceSearch(Board board){
-        System.out.println("SequenceSearch called.");
-        for (int row = 0; row < board.componentGrid.size(); row++) {
-            for (int col = 0; col < board.componentGrid.size(); col++) {
-                // If an "O" is present, check for all possible valid "SOS" sequences
-                Region button = board.getCell(row, col);
-                //"O" must be in the middle of a valid SOS sequence, best to only start a search from there:
-                if (Objects.equals(button.getId(), "O")) {
-                    //check 1 unit in all directions from position of cell for an "S"
-                    if (checkDirection(board, row, col, -1, 0) || //up
-                            checkDirection(board, row, col, 1, 0) ||  //down
-                            checkDirection(board, row, col, 0, -1) || //left
-                            checkDirection(board, row, col, 0, 1) ||  //right
-                            checkDirection(board, row, col, -1, -1) || //up-Left Diagonal
-                            checkDirection(board, row, col, -1, 1) ||  //up-Right Diagonal
-                            checkDirection(board, row, col, 1, -1) ||  //down-Left Diagonal
-                            checkDirection(board, row, col, 1, 1)) {   //down-Right Diagonal
-                        return true;
+    public Pair<Boolean, Integer> SequenceSearch(SOSGUI gui, int row, int col, TurnManager turnManager) {
+        //this counter is relevant to general games:
+        int points = 0;
+
+        //this flag is relevant to simple games:
+        boolean sequenceMade = false;
+
+        boolean pieceIsO = false;
+        //figure out what the current piece is:
+        if(turnManager.redTurn){
+            pieceIsO = gui.buttons.redO.isSelected();
+        }
+        else{
+            pieceIsO = gui.buttons.blueO.isSelected();
+        }
+
+        int[][] directionsToScan = {
+                {-1, 0},  // above
+                {-1, 1},  // above-right diagonal
+                {0, 1},   // right
+                {1, 0},   // below
+                {1, 1},   // below-right diagonal
+                {1, -1},  // below-left diagonal
+                {0, -1},  // left
+                {-1, -1}  // above-left diagonal
+        };
+
+        //track unique sequences to prevent duplicate counting
+        Set<SequenceCoordinates> uniqueSequences = new HashSet<>();
+
+        for (int[] direction : directionsToScan) {
+            SequenceCoordinates sequence = CheckDirection(gui.board, row, col, direction[0], direction[1], pieceIsO);
+            if (sequence != null && uniqueSequences.add(sequence)){
+                sequenceMade = true;
+                points++;
+
+                gui.DrawSequenceLine(sequence.startRow, sequence.startCol, sequence.endRow, sequence.endCol, turnManager.redTurn);
+            }
+        }
+        return new Pair<>(sequenceMade, points);
+    }
+
+    private SequenceCoordinates CheckDirection(Board board, int row, int col, int rowDir, int colDir, boolean pieceIsO) {
+        //if the piece placed is 'O', we need to find 'S' on both sides
+        if (pieceIsO) {
+            int oppositeRowDir = -rowDir;
+            int oppositeColDir = -colDir;
+
+            //calculate the positions for both surrounding cells
+            int firstRow = row + rowDir;
+            int firstCol = col + colDir;
+            int secondRow = row + oppositeRowDir;
+            int secondCol = col + oppositeColDir;
+
+            if (IsInBounds(board, firstRow, firstCol) && IsInBounds(board, secondRow, secondCol)) {
+                Region firstCell = board.getCell(firstRow, firstCol);
+                Region secondCell = board.getCell(secondRow, secondCol);
+
+                if (Objects.equals(firstCell.getId(), "S") && Objects.equals(secondCell.getId(), "S")) {
+                    //'O' is in the middle, so the sequence starts at `secondRow, secondCol` and ends at `firstRow, firstCol`
+                    return new SequenceCoordinates(secondRow, secondCol, firstRow, firstCol);
+                }
+            }
+        } else {
+            int nextRow = row + rowDir;
+            int nextCol = col + colDir;
+
+            if (IsInBounds(board, nextRow, nextCol)) {
+                Region nextCell = board.getCell(nextRow, nextCol);
+                if (Objects.equals(nextCell.getId(), "O")) {
+                    int afterNextRow = nextRow + rowDir;
+                    int afterNextCol = nextCol + colDir;
+
+                    if (IsInBounds(board, afterNextRow, afterNextCol)) {
+                        Region afterNextCell = board.getCell(afterNextRow, afterNextCol);
+
+                        if (Objects.equals(afterNextCell.getId(), "S")) {
+                            //'S' is at the start, so the sequence starts at `row, col` and ends at `afterNextRow, afterNextCol`
+                            return new SequenceCoordinates(row, col, afterNextRow, afterNextCol);
+                        }
                     }
                 }
             }
         }
-        return false;
+        //no sequence found
+        return null;
     }
 
-    //found an "SO" or an "OS". need to check if there exists another "S" to complete the sequence:
-    private boolean checkDirection(Board board, int row, int col, int rowDir, int colDir) {
-        //calculate positions of the surrounding 'S' cells for "SOS"
-        int startRow = row + rowDir;
-        int startCol = col + colDir;
-        int endRow = row - rowDir;
-        int endCol = col - colDir;
-
-        //indices must be within bounds to form an "SOS"
-        if (isInBounds(startRow, startCol) && isInBounds(endRow, endCol)) {
-            Region startS = board.getCell(startRow, startCol); //before the "O"
-            Region endS = board.getCell(endRow, endCol); //after the "O"
-            return Objects.equals(startS.getId(), "S") && Objects.equals(endS.getId(), "S");
-        }
-        return false;
-    }
-
-    private boolean isInBounds(Board board, int row, int col) {
+    private boolean IsInBounds(Board board, int row, int col) {
         return row >= 0 && row < board.componentGrid.size() && col >= 0 && col < board.componentGrid.size();
     }
 
@@ -60,7 +110,7 @@ public class SequenceScanner {
             for (int col = 0; col < board.componentGrid.size(); col++) {
                 Region button = board.getCell(row, col);
                 //check for at least one unoccupied cell
-                if (!Objects.equals(button.getId(), "O") && !Objects.equals(button.getId(), "S")) {
+                if (!button.isDisabled()) {
                     return false;
                 }
             }

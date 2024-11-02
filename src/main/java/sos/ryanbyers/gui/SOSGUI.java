@@ -2,20 +2,23 @@ package sos.ryanbyers.gui;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
-import sos.ryanbyers.gameLogic.SOSGamemode;
+import javafx.util.Pair;
 import sos.ryanbyers.gameLogic.TurnManager;
-import sos.ryanbyers.input.ButtonListener;
-import sos.ryanbyers.input.Alert;
 
 public class SOSGUI  {
     public ButtonHolder buttons;
     public LabelHolder labels;
     public HBoxHolder hBoxes;
     public VBoxHolder vBoxes;
-    private Alert alert;
 
     public Board board;
+    Pane overlayPane;
+    StackPane mainBoardPane;
 
     public SOSGUI(Stage primaryStage, int windowWidth, int windowHeight) {
         InitializeUIElements();
@@ -28,14 +31,29 @@ public class SOSGUI  {
         labels = new LabelHolder();
         hBoxes = new HBoxHolder();
         vBoxes = new VBoxHolder();
-        alert = new Alert();
+
+        overlayPane = new Pane();
+        overlayPane.setPickOnBounds(false);
+        overlayPane.setManaged(false);
+
+        mainBoardPane = new StackPane();
 
         int DEFAULT_BOARD_SIZE = 5;
-        board = new Board(5, Board.ComponentType.LABEL);
+        CreateLabelBoard(DEFAULT_BOARD_SIZE);
 
         //insert labels, buttons, hBoxes, vBoxes into boxes where necessary:
         FillHBoxes();
         FillVBoxes();
+
+
+    }
+
+    private void CreateButtonBoard(int gridSize){
+        this.board = new ButtonBoard(gridSize);
+    }
+
+    private void CreateLabelBoard(int gridSize){
+        this.board = new LabelBoard(gridSize);
     }
 
     private void FillHBoxes(){
@@ -89,15 +107,38 @@ public class SOSGUI  {
     }
 
     public void ResetBoard() {
-        vBoxes.sosGridBox.getChildren().remove(board.grid);
+        mainBoardPane.getChildren().clear();
 
         int gridSize = buttons.boardSizeSpinner.getValue();
-        board = new Board(gridSize, Board.ComponentType.BUTTON);
-        vBoxes.sosGridBox.getChildren().add(board.grid);
+
+        CreateButtonBoard(gridSize);
+
+        overlayPane = new Pane();
+        overlayPane.setPickOnBounds(false);
+
+        mainBoardPane.getChildren().addAll(board.grid, overlayPane);
+
+        vBoxes.sosGridBox.getChildren().clear();
+        vBoxes.sosGridBox.getChildren().add(mainBoardPane);
     }
 
     public void UpdateTurnIndicator(TurnManager turnManager){
         labels.turnIndicator.setText(turnManager.blueTurn ? "Blue" : "Red");
+    }
+    public void DrawSequenceLine(int startRow, int startCol, int endRow, int endCol, boolean isRedPlayer) {
+        Pair<Integer, Integer> cellSize = board.GetCellSize();
+
+        double startX = startCol * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double startY = startRow * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double endX = endCol * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double endY = endRow * cellSize.getKey() + (double) cellSize.getKey() / 2;
+
+        Line line = new Line(startX, startY, endX, endY);
+        line.setStroke(isRedPlayer ? Color.RED : Color.BLUE);
+        line.setStrokeWidth(1);
+        line.setManaged(false);
+
+        overlayPane.getChildren().add(line);
     }
 
     private void DisplayWindow(Stage primaryStage, int windowWidth, int windowHeight){

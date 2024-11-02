@@ -1,6 +1,6 @@
 package sos.ryanbyers.gameLogic;
 
-import sos.ryanbyers.gui.Board;
+import sos.ryanbyers.gui.SOSGUI;
 
 public class SOSSimpleGamemode extends SOSGamemode {
     public SOSSimpleGamemode() {
@@ -9,16 +9,17 @@ public class SOSSimpleGamemode extends SOSGamemode {
 
     //run when a player places a piece onto the board: handle when a piece is placed on the board
     @Override
-    public void HandleTurn(Board board, TurnManager turnManager){
-        if(SequenceMade(board)){
-            HandleSequenceFound();
+    public void HandleTurn(SOSGUI gui, TurnManager turnManager, int row, int col){
+        if(SequenceMade(gui, row, col, turnManager)){
+            HandleSequenceFound(gui, turnManager);
             return;
         }
-        if(BoardFull(board)){
-            HandleStalemate();
+        if(BoardFull(gui.board)){
+            HandleStalemate(gui);
             return;
         }
         turnManager.ChangeTurns();
+        gui.UpdateTurnIndicator((turnManager));
     }
 
     //handle when a stalemate is reached:
@@ -27,7 +28,7 @@ public class SOSSimpleGamemode extends SOSGamemode {
         alert.NotifySimpleStalemate();
         //stop user input
         gui.ResetBoard();
-        ResetGame();
+        gui.labels.turnIndicator.setText("Stalemate! -- Game Over!");
     }
 
     //handle when a red victory occurs
@@ -36,8 +37,7 @@ public class SOSSimpleGamemode extends SOSGamemode {
         alert.NotifySimpleRedVictory();
         //stop user input
         gui.ResetBoard();
-        ResetGame();
-
+        gui.labels.turnIndicator.setText("Congrats, Red! -- Game Over!");
     }
 
     //handle when the blue player wins
@@ -46,22 +46,17 @@ public class SOSSimpleGamemode extends SOSGamemode {
         alert.NotifySimpleBlueVictory();
         //stop user input
         gui.ResetBoard();
-        ResetGame();
+        gui.labels.turnIndicator.setText("Congrats, Blue! -- Game Over!");
     }
 
     //handle the case in which a sequence is found to have been made on the board
     @Override
-    public void HandleSequenceFound(TurnManager turnManager){
+    public void HandleSequenceFound(SOSGUI gui, TurnManager turnManager){
         if(turnManager.redTurn){
-            RedVictoryCondition();
+            HandleRedVictory(gui);
         }
         else{
-            BlueVictoryCondition();
+            HandleBlueVictory(gui);
         }
-    }
-
-    @Override
-    public void ResetGame(){
-        //nothing to be done here?
     }
 }
