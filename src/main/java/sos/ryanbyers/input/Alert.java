@@ -71,4 +71,20 @@ public class Alert {
         alert.setContentText("The board is full, and both player red and player blue made the same number of sequences (" + sequences + "). It's a draw!");
         alert.showAndWait();
     }
+
+    public void NotifyRedGoesFirst(){
+        javafx.scene.control.Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Red goes first!");
+        alert.setHeaderText(null);
+        alert.setContentText("Make your first move, red...");
+        alert.showAndWait();
+    }
+
+    public void NotifyBlueGoesFirst(){
+        javafx.scene.control.Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Blue goes first!");
+        alert.setHeaderText(null);
+        alert.setContentText("Make your first move, blue...");
+        alert.showAndWait();
+    }
 }

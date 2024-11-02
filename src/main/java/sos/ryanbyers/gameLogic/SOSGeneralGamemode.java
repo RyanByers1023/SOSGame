@@ -50,7 +50,7 @@ public class SOSGeneralGamemode extends SOSGamemode {
         ClearPoints();
     }
 
-    //handle the case in hwihc  the blue player wins
+    //handle the case in which the blue player wins
     @Override
     public void HandleBlueVictory(SOSGUI gui){
         alert.NotifyGeneralBlueVictory(redSequences, blueSequences);
@@ -61,12 +61,13 @@ public class SOSGeneralGamemode extends SOSGamemode {
     }
 
     @Override
+    //was adding sequences twice in this method-- throwing off point value
     public void HandleSequenceFound(SOSGUI gui, TurnManager turnManager){
         if(turnManager.redTurn){
-            redSequences++;
+           //find something productive to do here
         }
         else{
-            blueSequences++;
+            //find something productive to do here
         }
     }
 
