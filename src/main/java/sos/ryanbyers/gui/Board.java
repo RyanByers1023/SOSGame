@@ -1,67 +1,55 @@
 package sos.ryanbyers.gui;
 
-import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.util.Pair;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 
-public class Board {
+import java.util.ArrayList;
+
+public abstract class Board {
     public GridPane grid;
-    private Map<String, Button> buttonMap;
+    public ArrayList<ArrayList<Region>> componentGrid;
+    public Pair<Integer, Integer> cellSize;
 
-    //can create a board of labels or buttons
-    public enum ComponentType {
-        LABEL,
-        BUTTON
-    }
-
-    public Board(int gridSize, ComponentType type) {
+    public Board(int gridSize) {
         grid = new GridPane();
-        grid.setPadding(new Insets(10));
+        componentGrid = new ArrayList<>();
+        cellSize = new Pair<> (40, 40);
 
-        buttonMap = new HashMap<>();
-
-        InitializeGrid(gridSize, type);
+        InitializeGrid(gridSize);
     }
 
-    public void InitializeGrid(int gridSize, ComponentType type) {
-        Function<Integer, Region> componentFactory;
+    public void InitializeGrid(int gridSize) {
+        for (int row = 0; row < gridSize; ++row) {
+            //build grid row by row
+            ArrayList<Region> cellRow = new ArrayList<>();
+            for (int col = 0; col < gridSize; ++col) {
+                Region cell = InstantiateCell();
 
-        if(type == ComponentType.LABEL){
-            componentFactory = index -> new Label("");
-        }
-        else{
-            componentFactory = index -> new Button();
-        }
+                //style the cell
+                cell.setStyle("-fx-border-color: black; -fx-border-width: 1px; -fx-background-color: white;");
+                cell.setPrefSize(cellSize.getKey(), cellSize.getValue());
 
-        //create sos grid cells with selected type:
-        for(int row = 0; row < gridSize; ++row) {
-            for(int col = 0; col < gridSize; ++col) {
-                Region component = componentFactory.apply(row * gridSize + col);
-                component.setStyle("-fx-border-color: black; -fx-border-width: 1px; -fx-background-color: white;");
-                component.setPrefSize(40, 40);
-                if(type == ComponentType.BUTTON){
-                    String key = row + "," + col;
-                    buttonMap.put(key, (Button) component);
-                }
-                grid.add(component, col, row);
+                //add the cell to the row
+                cellRow.add(cell);
+
+                //add the cell to the grid
+                grid.add(cell, col, row);
             }
+            //add the whole row to componentGrid
+            this.componentGrid.add(cellRow);
         }
     }
 
     //for easy access to buttons
-    public Button getButton(int row, int col){
-        return buttonMap.get(row + "," + col);
+    public Region getCell(int row, int col){
+        return this.componentGrid.get(row).get(col);
     }
 
-    //for listener
-    public Collection<Button> getAllButtons(){
-        return buttonMap.values();
+    public Pair<Integer, Integer> GetCellSize(){
+        return this.cellSize;
     }
+
+    public abstract Region InstantiateCell();
 }

@@ -1,94 +1,78 @@
 package sos.ryanbyers.input;
 
-import javafx.scene.control.Alert;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
-import sos.ryanbyers.gui.Board;
-import sos.ryanbyers.gui.ButtonHolder;
-import sos.ryanbyers.gui.LabelHolder;
-import sos.ryanbyers.gameLogic.TurnManager;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import sos.ryanbyers.gameLogic.*;
+import sos.ryanbyers.gui.SOSGUI;
+
+import java.util.List;
 
 public class ButtonListener {
-    private ButtonHolder buttons;
-    private LabelHolder labels;
-    private Board board;
-    private VBox sosGridBox;
-    private TurnManager turnManager;
+    private final Alert alert;
+    private SOSGamemode gameLogicManager;
 
-    public ButtonListener(ButtonHolder buttons, LabelHolder labels, Board board, VBox sosGridBox) {
-        this.buttons = buttons;
-        this.labels = labels;
-        this.board = board;
-        this.sosGridBox = sosGridBox;
-        turnManager = new TurnManager();
-        Listen();
+    public ButtonListener(TurnManager turnManager, SOSGUI gui) {
+        this.alert = new Alert();
+
+        AttachStartButtonListener(turnManager, gui);
     }
 
-    private void Listen() {
-        buttons.startButton.setOnAction(event -> {
-            HandleStartButton();
-        });
-
-        for(Button button : board.getAllButtons()){
-            button.setOnAction(event -> {
-                //set appropriate team color for piece:
-                String textColor = turnManager.blueTurn ? "blue" : "red";
-                button.setStyle("-fx-text-fill: " + textColor + "; -fx-font-weight: bold;");
-
-                if(turnManager.redTurn){
-                    if(!(buttons.redO.isSelected() || buttons.redS.isSelected())){
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Red, choose a piece to place on the board.");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Please select a piece, red.");
-                        alert.showAndWait();
-                    }
-                    else{
-                        button.setText(buttons.redO.isSelected() ? "O" : "S");
-                        button.setDisable(true);
-                        turnManager.ChangeTurns();
-                        labels.turnIndicator.setText((turnManager.blueTurn) ? "Blue" : "Red");
-                    }
-
+    private void AttachCellListeners(SOSGUI gui, TurnManager turnManager) {
+        for (List<Region> row : gui.board.componentGrid) {
+            for (Region component : row) {
+                if (component instanceof Button button) { //button was clicked on the board, need to handle...
+                    button.setOnAction(event -> HandleCellClick(gui, turnManager, button));
                 }
-                else{
-                    if(!(buttons.blueO.isSelected() || buttons.blueS.isSelected())){
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Blue, choose a piece to place on the board.");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Please select a piece, blue.");
-                        alert.showAndWait();
-                    }
-                    else{
-                        button.setText(buttons.blueO.isSelected() ? "O" : "S");
-                        button.setDisable(true);
-                        turnManager.ChangeTurns();
-                        labels.turnIndicator.setText((turnManager.blueTurn) ? "Blue" : "Red");
-                    }
-
-                }
-            });
+            }
         }
     }
 
-    private void HandleStartButton(){
-        if(!(buttons.simpleGamemode.isSelected() || buttons.generalGamemode.isSelected())){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No game mode selected.");
-            alert.setHeaderText(null);
-            alert.setContentText("Please select a game mode.");
-            alert.showAndWait();
+    private void HandleCellClick(SOSGUI gui, TurnManager turnManager, Button button) {
+        //get location of button click (to search for sequences more efficiently):
+        //cast to node
+        Node node = (Node) button;
+        //get the row
+        int row = GridPane.getRowIndex(node);
+        //get the column
+        int col = GridPane.getColumnIndex(node);
+
+        //who placed it?:
+        boolean isRedTurn = turnManager.redTurn;
+        boolean pieceSelected = isRedTurn ?
+                (gui.buttons.redO.isSelected() || gui.buttons.redS.isSelected()) :
+                (gui.buttons.blueO.isSelected() || gui.buttons.blueS.isSelected());
+
+        //was a piece even selected?:
+        if (!pieceSelected) {
+            alert.AlertPieceNotSelected(turnManager);
+            return;
         }
-        else{
-            //remove previous board
-            sosGridBox.getChildren().remove(board.grid);
-            board = new Board(buttons.boardSizeSpinner.getValue(), Board.ComponentType.BUTTON);
-            //add new board
-            sosGridBox.getChildren().add(board.grid);
-            //reinitialize listeners:
-            Listen();
-            turnManager.AnnounceFirstTurn();
-            labels.turnIndicator.setText((turnManager.blueTurn) ? "Blue" : "Red");
+
+        //a piece was selected, modify the button in place to reflect this:
+        gui.ModifyButton(button, turnManager);
+
+        gameLogicManager.HandleTurn(gui, turnManager, row, col);
+    }
+
+    private void AttachStartButtonListener(TurnManager turnManager, SOSGUI gui) {
+        gui.buttons.startButton.setOnAction(event -> HandleStartButtonClick(turnManager, gui));
+    }
+
+    private void HandleStartButtonClick(TurnManager turnManager, SOSGUI gui) {
+        if (!(gui.buttons.simpleGamemode.isSelected() || gui.buttons.generalGamemode.isSelected())) {
+            alert.AlertNoGamemodeChosen();
+            return;
         }
+
+        this.gameLogicManager = gui.buttons.generalGamemode.isSelected()
+                ? new SOSGeneralGamemode()
+                : new SOSSimpleGamemode();
+
+        gui.ResetBoard();
+        AttachCellListeners(gui, turnManager);
+        turnManager.StartNewGame();
+        gui.UpdateTurnIndicator(turnManager);
     }
 }

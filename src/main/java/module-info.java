@@ -11,4 +11,6 @@ module sos.ryanbyers.sosjavafx {
     opens sos.ryanbyers.gameLogic to javafx.fxml;
     exports sos.ryanbyers.gui;
     opens sos.ryanbyers.gui to javafx.fxml;
+    opens sos.ryanbyers.driver to javafx.fxml;
+    exports sos.ryanbyers.driver;
 }

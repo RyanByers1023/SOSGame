@@ -1,19 +1,26 @@
 package sos.ryanbyers.gameLogic;
 
 import javafx.scene.control.Alert;
-
 import java.util.Random;
 
 public class TurnManager {
     public boolean blueTurn;
     public boolean redTurn;
+    private final Random random;
 
     public TurnManager(){
-        Random random = new Random();
+        random = new Random();
         blueTurn = random.nextBoolean();
+        redTurn = !blueTurn;
     }
 
-    public void AnnounceFirstTurn(){
+    public void StartNewGame(){
+        blueTurn = random.nextBoolean();
+        redTurn = !blueTurn;
+        AnnounceFirstTurn();
+    }
+
+    private void AnnounceFirstTurn(){
         if(blueTurn){
             redTurn = false;
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -23,7 +30,6 @@ public class TurnManager {
             alert.showAndWait();
         }
         else{
-            blueTurn = false;
             redTurn = true;
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Red goes first!");
