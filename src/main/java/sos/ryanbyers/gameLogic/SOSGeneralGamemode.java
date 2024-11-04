@@ -63,11 +63,8 @@ public class SOSGeneralGamemode extends SOSGamemode {
     @Override
     //was adding sequences twice in this method-- throwing off point value
     public void HandleSequenceFound(SOSGUI gui, TurnManager turnManager){
-        if(turnManager.redTurn){
-           //find something productive to do here
-        }
-        else{
-            //find something productive to do here
+            //pass
+            return;
         }
     }
 
