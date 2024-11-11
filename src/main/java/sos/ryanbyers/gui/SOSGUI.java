@@ -44,8 +44,6 @@ public class SOSGUI  {
         //insert labels, buttons, hBoxes, vBoxes into boxes where necessary:
         FillHBoxes();
         FillVBoxes();
-
-
     }
 
     private void CreateButtonBoard(int gridSize){
@@ -102,7 +100,6 @@ public class SOSGUI  {
             button.setId(buttons.blueO.isSelected() ? "O" : "S");
         }
 
-        button.setDisable(true);
         labels.turnIndicator.setText((turnManager.blueTurn) ? "Blue" : "Red");
     }
 
@@ -128,11 +125,11 @@ public class SOSGUI  {
     public void DrawSequenceLine(SequenceCoordinates sequence, boolean isRedPlayer) {
         Pair<Integer, Integer> cellSize = board.GetCellSize();
 
-        double startX = sequence.coordinatesStart.y * cellSize.getKey() + (double) cellSize.getKey() / 2;
-        double startY = sequence.coordinatesStart.x * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double startX = sequence.coordinatesStart.x * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double startY = sequence.coordinatesStart.y * cellSize.getKey() + (double) cellSize.getKey() / 2;
 
-        double endX = sequence.coordinatesEnd.y * cellSize.getKey() + (double) cellSize.getKey() / 2;
-        double endY = sequence.coordinatesEnd.x * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double endX = sequence.coordinatesEnd.x * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double endY = sequence.coordinatesEnd.y * cellSize.getKey() + (double) cellSize.getKey() / 2;
 
         Line line = new Line(startX, startY, endX, endY);
         line.setStroke(isRedPlayer ? Color.RED : Color.BLUE);

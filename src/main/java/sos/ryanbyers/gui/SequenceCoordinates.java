@@ -4,9 +4,9 @@ public class SequenceCoordinates {
     public Vec2 coordinatesStart;
     public Vec2 coordinatesEnd;
 
-    public SequenceCoordinates(int startRow, int startCol, int endRow, int endCol) {
-        coordinatesStart = new Vec2(startRow, startCol);
-        coordinatesEnd = new Vec2(endRow, endCol);
+    public SequenceCoordinates(Vec2 coordinatesStart, Vec2 coordinatesEnd) {
+        this.coordinatesStart = coordinatesStart;
+        this.coordinatesEnd = coordinatesEnd;
     }
 
     //override for set used within SequenceScanner -- ensures that start and end coordinates can be interchanged and still be considered the same sequence

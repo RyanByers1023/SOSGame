@@ -5,6 +5,7 @@ import javafx.util.Pair;
 import sos.ryanbyers.gui.Board;
 import sos.ryanbyers.gui.SOSGUI;
 import sos.ryanbyers.gui.SequenceCoordinates;
+import sos.ryanbyers.gui.Vec2;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,21 +23,18 @@ public class SequenceScanner {
                 {1, -1},  // below-left diagonal
                 {0, -1},  // left
                 {-1, -1}  // above-left diagonal
-        };
-
-    //run after every move made
-    //row and col store the position (x, y) of the cell of the last piece placement
+    };
 
     //TO-DO: pass pieceIsO by parameter (makes AIBoardScan much easier)
-    public int SequenceSearch(SOSGUI gui, int row, int col, TurnManager turnManager) {
+    public int SequenceSearch(SOSGUI gui, Vec2 cellPos, TurnManager turnManager) {
         //the piece is an 'O', or it is not an 'O' (in which case, it must be an 'S')
         //this is needed because the scanner looks for different sequence fragments depending on the piece it is searching from
         boolean pieceIsO = GetPieceType(gui, turnManager);
 
-        return PerformScan(gui, row, col, turnManager, pieceIsO);
+        return PerformScan(gui, cellPos, turnManager, pieceIsO);
     }
 
-    private int PerformScan(SOSGUI gui, int row, int col, TurnManager turnManager, boolean pieceIsO) {
+    private int PerformScan(SOSGUI gui, Vec2 cellPos, TurnManager turnManager, boolean pieceIsO) {
         //general game usage: count # of sequences made during this move. dont change turn if at least one was made
         //simple game usage: if sequencesMade > 0, a sequence was made and the game can now end
         int sequencesMade = 0;
@@ -46,7 +44,7 @@ public class SequenceScanner {
 
         for (int[] direction : this.directionsToScan) {
             //if a sequence is not detected, this function will return null to sequence
-            SequenceCoordinates sequence = CheckDirection(gui.board, row, col, direction[0], direction[1], pieceIsO);
+            SequenceCoordinates sequence = CheckDirection(gui.board, cellPos, new Vec2(direction[0], direction[1]), pieceIsO);
             if (sequence != null && uniqueSequences.add(sequence)){
                 //keep track of number of sequences made
                 sequencesMade++;
@@ -65,36 +63,39 @@ public class SequenceScanner {
         return gui.buttons.blueO.isSelected();
     }
 
-    private SequenceCoordinates CheckDirection(Board board, int row, int col, int rowDir, int colDir, boolean pieceIsO) {
+    private SequenceCoordinates CheckDirection(Board board, Vec2 cellPos, Vec2 cellDirection, boolean pieceIsO) {
         //if the piece placed is 'O', an 'S' needs to be on both sides of the 'O'
         if (pieceIsO) {
-            return HandleOCheck(board, row, col, rowDir, colDir);
+            return HandleOCheck(board, cellPos, cellDirection);
         }
         //if the piece placed is 'S', an 'OS' (after the 'S') or an 'SO' (before the 'S') needs to be found
         else {
-            return HandleSCheck(board, row, col, rowDir, colDir);
+            return HandleSCheck(board, cellPos, cellDirection);
         }
     }
 
-    private SequenceCoordinates HandleOCheck(Board board, int row, int col, int rowDir, int colDir){
-        int oppositeRowDir = -rowDir;
-        int oppositeColDir = -colDir;
+    private SequenceCoordinates HandleOCheck(Board board, Vec2 cellPos, Vec2 cellDirection){
+        int oppositeRowDir = -cellDirection.y;
+        int oppositeColDir = -cellDirection.x;
 
         //calculate the positions for both surrounding cells:
-        int firstRow = row + rowDir;
-        int firstCol = col + colDir;
-        int secondRow = row + oppositeRowDir;
-        int secondCol = col + oppositeColDir;
+        int firstRow = cellPos.y + cellDirection.y;
+        int firstCol = cellPos.x + cellDirection.x;
+        Vec2 firstCellPos = new Vec2(firstCol, firstRow);
+
+        int secondRow = cellPos.y + oppositeRowDir;
+        int secondCol = cellPos.x + oppositeColDir;
+        Vec2 secondCellPos = new Vec2(secondCol, secondRow);
 
         //check if these values lie within the board's bounds:
-        if (IsInBounds(board, firstRow, firstCol) && IsInBounds(board, secondRow, secondCol)) {
-            Region firstCell = board.getCell(firstRow, firstCol);
-            Region secondCell = board.getCell(secondRow, secondCol);
+        if (IsInBounds(board, firstCellPos) && IsInBounds(board, secondCellPos)) {
+            Region firstCell = board.GetCell(firstCellPos);
+            Region secondCell = board.GetCell(secondCellPos);
 
             //looking for two surrounding Ss, check to see if these fulfil this parameter
             if (Objects.equals(firstCell.getId(), "S") && Objects.equals(secondCell.getId(), "S")) {
                 //SOS sequence found, return its coordinates
-                return new SequenceCoordinates(secondRow, secondCol, firstRow, firstCol);
+                return new SequenceCoordinates(firstCellPos, secondCellPos);
             }
         }
 
@@ -102,25 +103,27 @@ public class SequenceScanner {
         return null;
     }
 
-    private SequenceCoordinates HandleSCheck(Board board, int row, int col, int rowDir, int colDir){
-        int nextRow = row + rowDir;
-        int nextCol = col + colDir;
+    private SequenceCoordinates HandleSCheck(Board board, Vec2 cellPos, Vec2 cellDirection){
+        int nextCol = cellPos.x + cellDirection.x;
+        int nextRow = cellPos.y + cellDirection.y;
+        Vec2 nextCellPos = new Vec2(nextCol, nextRow);
 
-        if (IsInBounds(board, nextRow, nextCol)) {
-            Region nextCell = board.getCell(nextRow, nextCol);
+        if (IsInBounds(board, nextCellPos)) {
+            Region nextCell = board.GetCell(nextCellPos);
             //an 'O' was found, now check if that 'O' is followed by an 'S':
             if (Objects.equals(nextCell.getId(), "O")) {
-                int afterNextRow = nextRow + rowDir;
-                int afterNextCol = nextCol + colDir;
+                int afterNextCol = nextCol + cellDirection.x;
+                int afterNextRow = nextRow + cellDirection.y;
+                Vec2 afterNextCellPos = new Vec2(afterNextCol, afterNextRow);
 
                 //ensure the position that is to be checked for a potential 'S' is within the bounds of the board:
-                if (IsInBounds(board, afterNextRow, afterNextCol)) {
-                    Region afterNextCell = board.getCell(afterNextRow, afterNextCol);
+                if (IsInBounds(board, afterNextCellPos)) {
+                    Region afterNextCell = board.GetCell(afterNextCellPos);
 
                     //this 'S' (if found) completes the sequence:
                     if (Objects.equals(afterNextCell.getId(), "S")) {
                         //SOS sequence found, return its coordinates
-                        return new SequenceCoordinates(row, col, afterNextRow, afterNextCol);
+                        return new SequenceCoordinates(cellPos, afterNextCellPos);
                     }
                 }
             }
@@ -130,25 +133,15 @@ public class SequenceScanner {
         return null;
     }
 
-    private boolean IsInBounds(Board board, int row, int col) {
+    private boolean IsInBounds(Board board, Vec2 cellPos) {
         //check if both row value and col value fall within the boundaries of the grid
-        return  row >= 0 &&
-                row < board.componentGrid.size() &&
-                col >= 0 &&
-                col < board.componentGrid.size();
+        return  cellPos.y >= 0 &&
+                cellPos.y < board.componentGrid.size() &&
+                cellPos.x >= 0 &&
+                cellPos.x < board.componentGrid.size();
     }
 
     public boolean BoardFull(Board board){
-        for (int row = 0; row < board.componentGrid.size(); row++) {
-            for (int col = 0; col < board.componentGrid.size(); col++) {
-                Region button = board.getCell(row, col);
-                //check for at least one unoccupied cell
-                if (!button.isDisabled()) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return board.unoccupiedCells.isEmpty();
     }
-
 }

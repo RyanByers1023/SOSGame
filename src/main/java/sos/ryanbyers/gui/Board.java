@@ -20,6 +20,8 @@ public abstract class Board {
     public Pair<Integer, Integer> cellSize;
 
     //used to track which cells are still unused (for AI scanner and BoardIsFull())
+    //.x = column
+    //.y = row
     public Set<Vec2> unoccupiedCells;
 
     public Board(int gridSize) {
@@ -35,10 +37,11 @@ public abstract class Board {
     }
 
     public void InitializeGrid(int gridSize) {
-        for (int row = 0; row < gridSize; ++row) {
-            //build grid row by row
-            ArrayList<Region> cellRow = new ArrayList<>();
-            for (int col = 0; col < gridSize; ++col) {
+        //build the column:
+        for (int col = 0; col < gridSize; ++col) {
+            ArrayList<Region> cellCol = new ArrayList<>();
+            //build the row:
+            for (int row = 0; row < gridSize; ++row) {
                 Region cell = InstantiateCell();
 
                 //style the cell
@@ -46,23 +49,31 @@ public abstract class Board {
                 cell.setPrefSize(cellSize.getKey(), cellSize.getValue());
 
                 //add the cell to the row
-                cellRow.add(cell);
+                cellCol.add(cell);
 
                 //add the cell to the ui grid
                 grid.add(cell, col, row);
+
+                //add the cell to unoccupied cells
+                unoccupiedCells.add(new Vec2(col, row));
             }
             //add the whole row to componentGrid
-            this.componentGrid.add(cellRow);
+            this.componentGrid.add(cellCol);
         }
     }
 
     //for easy access to buttons
-    public Region getCell(int row, int col){
-        return this.componentGrid.get(row).get(col);
+    public Region GetCell(Vec2 cellPos){
+        return this.componentGrid.get(cellPos.x).get(cellPos.y);
     }
 
     public Pair<Integer, Integer> GetCellSize(){
         return this.cellSize;
+    }
+
+    public void DisableCell(Vec2 cellPos){
+        GetCell(cellPos).setDisable(true);
+        unoccupiedCells.remove(cellPos);
     }
 
     public abstract Region InstantiateCell();

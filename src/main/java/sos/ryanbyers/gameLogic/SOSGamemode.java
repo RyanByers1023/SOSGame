@@ -2,6 +2,7 @@ package sos.ryanbyers.gameLogic;
 
 import sos.ryanbyers.gui.Board;
 import sos.ryanbyers.gui.SOSGUI;
+import sos.ryanbyers.gui.Vec2;
 import sos.ryanbyers.input.AlertMessage;
 
 public abstract class SOSGamemode {
@@ -20,8 +21,8 @@ public abstract class SOSGamemode {
     }
 
 
-    public boolean SequenceMade(SOSGUI gui, int row, int col, TurnManager turnManager) {
-       int sequencesMade = this.sequenceScanner.SequenceSearch(gui, row, col, turnManager);
+    public boolean SequenceMade(SOSGUI gui, Vec2 cellPos, TurnManager turnManager) {
+       int sequencesMade = this.sequenceScanner.SequenceSearch(gui, cellPos, turnManager);
 
         //handle points:
         if(turnManager.redTurn){
@@ -42,7 +43,7 @@ public abstract class SOSGamemode {
     //abstract methods:
 
     //turns handled slightly different in general vs simple
-    public abstract void HandleTurn(SOSGUI gui, TurnManager turnManager, int row, int col);
+    public abstract void HandleTurn(SOSGUI gui, TurnManager turnManager, Vec2 cellPos);
 
     //red/blue victory determined by a point value within general games, no points in simple games
     public abstract void HandleRedVictory(SOSGUI gui);

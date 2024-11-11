@@ -1,6 +1,7 @@
 package sos.ryanbyers.gameLogic;
 
 import sos.ryanbyers.gui.SOSGUI;
+import sos.ryanbyers.gui.Vec2;
 
 public class SOSGeneralGamemode extends SOSGamemode {
     public SOSGeneralGamemode() {
@@ -9,9 +10,9 @@ public class SOSGeneralGamemode extends SOSGamemode {
 
     //run after a piece is placed:
     @Override
-    public void HandleTurn(SOSGUI gui, TurnManager turnManager, int row, int col){
+    public void HandleTurn(SOSGUI gui, TurnManager turnManager, Vec2 cellPos){
         //do not change turns when a sequence is made by either player (general game rule) or the game has ended
-        if(SequenceMade(gui, row, col, turnManager)){
+        if(SequenceMade(gui, cellPos, turnManager)){
             HandleSequenceFound(gui, turnManager);
         }
         if(BoardFull(gui.board)){

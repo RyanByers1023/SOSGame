@@ -1,6 +1,7 @@
 package sos.ryanbyers.gameLogic;
 
 import sos.ryanbyers.gui.SOSGUI;
+import sos.ryanbyers.gui.Vec2;
 
 public class SOSSimpleGamemode extends SOSGamemode {
     public SOSSimpleGamemode() {
@@ -9,8 +10,8 @@ public class SOSSimpleGamemode extends SOSGamemode {
 
     //run when a player places a piece onto the board: handle when a piece is placed on the board
     @Override
-    public void HandleTurn(SOSGUI gui, TurnManager turnManager, int row, int col){
-        if(SequenceMade(gui, row, col, turnManager)){
+    public void HandleTurn(SOSGUI gui, TurnManager turnManager, Vec2 cellPos){
+        if(SequenceMade(gui, cellPos, turnManager)){
             HandleSequenceFound(gui, turnManager);
             return;
         }

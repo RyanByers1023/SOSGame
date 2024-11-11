@@ -6,6 +6,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import sos.ryanbyers.gameLogic.*;
 import sos.ryanbyers.gui.SOSGUI;
+import sos.ryanbyers.gui.Vec2;
 
 import java.util.List;
 
@@ -31,14 +32,16 @@ public class ButtonListener {
 
     private void HandleCellClick(SOSGUI gui, TurnManager turnManager, Button button) {
         //get location of button click (to search for sequences more efficiently):
-        //cast to node
-        Node node = (Node) button;
-        //get the row
-        int row = GridPane.getRowIndex(node);
-        //get the column
-        int col = GridPane.getColumnIndex(node);
+        //get the row:
+        int row = GridPane.getRowIndex(button);
 
-        //who placed it?:
+        //get the column:
+        int col = GridPane.getColumnIndex(button);
+
+        //store in a Vec2 for easier readability:
+        Vec2 cellPos = new Vec2(col, row);
+
+        //who placed the latest piece?:
         boolean isRedTurn = turnManager.redTurn;
         boolean pieceSelected = isRedTurn ?
                 (gui.buttons.redO.isSelected() || gui.buttons.redS.isSelected()) :
@@ -53,7 +56,11 @@ public class ButtonListener {
         //a piece was selected, modify the button in place to reflect this:
         gui.ModifyButton(button, turnManager);
 
-        gameLogicManager.HandleTurn(gui, turnManager, row, col);
+        //disable the button on the board:
+        gui.board.DisableCell(cellPos);
+
+        //handle the current turn according to the appropriate gamemode rules:
+        gameLogicManager.HandleTurn(gui, turnManager, cellPos);
     }
 
     private void AttachStartButtonListener(TurnManager turnManager, SOSGUI gui) {
