@@ -10,11 +10,11 @@ import sos.ryanbyers.gui.SOSGUI;
 import java.util.List;
 
 public class ButtonListener {
-    private final Alert alert;
+    private final AlertMessage alertMessage;
     private SOSGamemode gameLogicManager;
 
     public ButtonListener(TurnManager turnManager, SOSGUI gui) {
-        this.alert = new Alert();
+        this.alertMessage = new AlertMessage();
 
         AttachStartButtonListener(turnManager, gui);
     }
@@ -46,7 +46,7 @@ public class ButtonListener {
 
         //was a piece even selected?:
         if (!pieceSelected) {
-            alert.AlertPieceNotSelected(turnManager);
+            alertMessage.AlertPieceNotSelected(turnManager);
             return;
         }
 
@@ -62,7 +62,7 @@ public class ButtonListener {
 
     private void HandleStartButtonClick(TurnManager turnManager, SOSGUI gui) {
         if (!(gui.buttons.simpleGamemode.isSelected() || gui.buttons.generalGamemode.isSelected())) {
-            alert.AlertNoGamemodeChosen();
+            alertMessage.AlertNoGamemodeChosen();
             return;
         }
 

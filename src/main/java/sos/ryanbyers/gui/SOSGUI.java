@@ -125,13 +125,13 @@ public class SOSGUI  {
     public void UpdateTurnIndicator(TurnManager turnManager){
         labels.turnIndicator.setText(turnManager.blueTurn ? "Blue" : "Red");
     }
-    public void DrawSequenceLine(int startRow, int startCol, int endRow, int endCol, boolean isRedPlayer) {
+    public void DrawSequenceLine(SequenceCoordinates sequence, boolean isRedPlayer) {
         Pair<Integer, Integer> cellSize = board.GetCellSize();
 
-        double startX = startCol * cellSize.getKey() + (double) cellSize.getKey() / 2;
-        double startY = startRow * cellSize.getKey() + (double) cellSize.getKey() / 2;
-        double endX = endCol * cellSize.getKey() + (double) cellSize.getKey() / 2;
-        double endY = endRow * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double startX = sequence.coordinatesStart.getValue() * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double startY = sequence.coordinatesStart.getKey() * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double endX = sequence.coordinatesEnd.getValue() * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double endY = sequence.coordinatesEnd.getKey() * cellSize.getKey() + (double) cellSize.getKey() / 2;
 
         Line line = new Line(startX, startY, endX, endY);
         line.setStroke(isRedPlayer ? Color.RED : Color.BLUE);

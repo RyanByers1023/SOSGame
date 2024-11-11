@@ -1,13 +1,12 @@
 package sos.ryanbyers.gameLogic;
 
-import javafx.util.Pair;
 import sos.ryanbyers.gui.Board;
 import sos.ryanbyers.gui.SOSGUI;
-import sos.ryanbyers.input.Alert;
+import sos.ryanbyers.input.AlertMessage;
 
 public abstract class SOSGamemode {
     //for checking the board for new sequences after each turn
-    protected Alert alert;
+    protected AlertMessage alertMessage;
     protected SequenceScanner sequenceScanner;
 
     protected int redSequences = 0;
@@ -16,32 +15,26 @@ public abstract class SOSGamemode {
 
     //super constructor:
     public SOSGamemode() {
-        this.alert = new Alert();
+        this.alertMessage = new AlertMessage();
         this.sequenceScanner = new SequenceScanner();
     }
 
 
     public boolean SequenceMade(SOSGUI gui, int row, int col, TurnManager turnManager) {
-        Pair<Boolean, Integer> result = this.sequenceScanner.SequenceSearch(gui, row, col, turnManager);
-
-        //determine whether or not a sequence was made
-        boolean sequenceMade = result.getKey();
+       int sequencesMade = this.sequenceScanner.SequenceSearch(gui, row, col, turnManager);
 
         //handle points:
-        if(sequenceMade) {
-            int points = result.getValue();
-            if(turnManager.redTurn){
-                redSequences += points;
-            }
-            else{
-                blueSequences += points;
-            }
+        if(turnManager.redTurn){
+            redSequences += sequencesMade;
+        }
+        else{
+            blueSequences += sequencesMade;
         }
 
-        return sequenceMade;
+       return sequencesMade > 0;
     }
 
-    //the board being full is a condition that can occur both in general and simple games
+    //the board being full is a condition that needs to be checked in both gamemodes
     public boolean BoardFull(Board board){
         return this.sequenceScanner.BoardFull(board);
     }

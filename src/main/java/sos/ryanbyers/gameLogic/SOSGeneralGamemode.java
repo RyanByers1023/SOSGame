@@ -33,7 +33,7 @@ public class SOSGeneralGamemode extends SOSGamemode {
     //handle when a stalemate is reached:
     @Override
     public void HandleStalemate(SOSGUI gui){
-        alert.NotifyGeneralStalemate(redSequences);
+        alertMessage.NotifyGeneralStalemate(redSequences);
         //stop the user from inputting further... (this will be the same for the rest of the methods)
         gui.ResetBoard();
         gui.labels.turnIndicator.setText("Stalemate! -- Game Over!");
@@ -43,7 +43,7 @@ public class SOSGeneralGamemode extends SOSGamemode {
     //handle when a red victory occurs
     @Override
     public void HandleRedVictory(SOSGUI gui){
-        alert.NotifyGeneralRedVictory(redSequences, blueSequences);
+        alertMessage.NotifyGeneralRedVictory(redSequences, blueSequences);
         //prevent user input
         gui.ResetBoard();
         gui.labels.turnIndicator.setText("Congrats, Red! -- Game Over!");
@@ -53,7 +53,7 @@ public class SOSGeneralGamemode extends SOSGamemode {
     //handle the case in which the blue player wins
     @Override
     public void HandleBlueVictory(SOSGUI gui){
-        alert.NotifyGeneralBlueVictory(redSequences, blueSequences);
+        alertMessage.NotifyGeneralBlueVictory(redSequences, blueSequences);
         //stop user input
         gui.ResetBoard();
         gui.labels.turnIndicator.setText("Congrats, Blue! -- Game Over!");
@@ -63,13 +63,11 @@ public class SOSGeneralGamemode extends SOSGamemode {
     @Override
     //was adding sequences twice in this method-- throwing off point value
     public void HandleSequenceFound(SOSGUI gui, TurnManager turnManager){
-            //pass
-            return;
-        }
+        return;
     }
 
     public void ClearPoints(){
-        redSequences = 0;
-        blueSequences = 0;
+        this.redSequences = 0;
+        this.blueSequences = 0;
     }
 }

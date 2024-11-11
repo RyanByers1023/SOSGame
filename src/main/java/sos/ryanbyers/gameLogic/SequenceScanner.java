@@ -28,27 +28,31 @@ public class SequenceScanner {
     //row and col store the position (x, y) of the cell of the last piece placement
     public int SequenceSearch(SOSGUI gui, int row, int col, TurnManager turnManager) {
         //the piece is an 'O', or it is not an 'O' (in which case, it must be an 'S')
+        //this is needed because the scanner looks for different sequence fragments depending on the piece it is searching from
         boolean pieceIsO = GetPieceType(gui, turnManager);
 
         return PerformScan(gui, row, col, turnManager, pieceIsO);
     }
 
     private int PerformScan(SOSGUI gui, int row, int col, TurnManager turnManager, boolean pieceIsO) {
-        //general game usage: count # of points made during this move (also a sequence was made if points > 0, so the turn shouldnt change)
-        //simple game usage: if points > 0, a sequence was made and the game can now end
-        int points = 0;
+        //general game usage: count # of sequences made during this move. dont change turn if at least one was made
+        //simple game usage: if sequencesMade > 0, a sequence was made and the game can now end
+        int sequencesMade = 0;
+
+        //track unique sequences to prevent duplicate counting
+        Set<SequenceCoordinates> uniqueSequences = new HashSet<>();
 
         for (int[] direction : this.directionsToScan) {
             //if a sequence is not detected, this function will return null to sequence
             SequenceCoordinates sequence = CheckDirection(gui.board, row, col, direction[0], direction[1], pieceIsO);
-            if (sequence != null){
+            if (sequence != null && uniqueSequences.add(sequence)){
                 //keep track of number of sequences made
-                points++;
+                sequencesMade++;
                 //draw a line to show the sequence visually
-                gui.DrawSequenceLine(sequence.startRow, sequence.startCol, sequence.endRow, sequence.endCol, turnManager.redTurn);
+                gui.DrawSequenceLine(sequence, turnManager.redTurn);
             }
         }
-        return points;
+        return sequencesMade;
     }
 
     //figure out what the current piece is (is it an O or is it not an O?): (relevant to scanning process)

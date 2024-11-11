@@ -2,7 +2,7 @@ package sos.ryanbyers.input;
 
 import sos.ryanbyers.gameLogic.TurnManager;
 
-public class Alert {
+public class AlertMessage {
     public void AlertNoGamemodeChosen(){
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
         alert.setTitle("No game mode selected.");
@@ -73,7 +73,7 @@ public class Alert {
     }
 
     public void NotifyRedGoesFirst(){
-        javafx.scene.control.Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
         alert.setTitle("Red goes first!");
         alert.setHeaderText(null);
         alert.setContentText("Make your first move, red...");
@@ -81,7 +81,7 @@ public class Alert {
     }
 
     public void NotifyBlueGoesFirst(){
-        javafx.scene.control.Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
         alert.setTitle("Blue goes first!");
         alert.setHeaderText(null);
         alert.setContentText("Make your first move, blue...");

@@ -1,4 +1,4 @@
-packages sos.ryanbyers.players;
+package sos.ryanbyers.players;
 
 public class AIBoardScan{
     //perform a full scan of the board

@@ -25,7 +25,7 @@ public class SOSSimpleGamemode extends SOSGamemode {
     //handle when a stalemate is reached:
     @Override
     public void HandleStalemate(SOSGUI gui){
-        alert.NotifySimpleStalemate();
+        alertMessage.NotifySimpleStalemate();
         //stop user input
         gui.ResetBoard();
         gui.labels.turnIndicator.setText("Stalemate! -- Game Over!");
@@ -34,7 +34,7 @@ public class SOSSimpleGamemode extends SOSGamemode {
     //handle when a red victory occurs
     @Override
     public void HandleRedVictory(SOSGUI gui){
-        alert.NotifySimpleRedVictory();
+        alertMessage.NotifySimpleRedVictory();
         //stop user input
         gui.ResetBoard();
         gui.labels.turnIndicator.setText("Congrats, Red! -- Game Over!");
@@ -43,7 +43,7 @@ public class SOSSimpleGamemode extends SOSGamemode {
     //handle when the blue player wins
     @Override
     public void HandleBlueVictory(SOSGUI gui){
-        alert.NotifySimpleBlueVictory();
+        alertMessage.NotifySimpleBlueVictory();
         //stop user input
         gui.ResetBoard();
         gui.labels.turnIndicator.setText("Congrats, Blue! -- Game Over!");
