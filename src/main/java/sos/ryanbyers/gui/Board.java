@@ -6,16 +6,30 @@ import javafx.util.Pair;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Board {
+    //grid that is displayed within the ui to user
     public GridPane grid;
+
+    //for direct, easy access to grid elements
     public ArrayList<ArrayList<Region>> componentGrid;
+
+    //used to set the size of the cells
     public Pair<Integer, Integer> cellSize;
+
+    //used to track which cells are still unused (for AI scanner and BoardIsFull())
+    public Set<Vec2> unoccupiedCells;
 
     public Board(int gridSize) {
         grid = new GridPane();
         componentGrid = new ArrayList<>();
+
+        //change this value to make cells bigger or smaller
         cellSize = new Pair<> (40, 40);
+
+        unoccupiedCells = new HashSet<>();
 
         InitializeGrid(gridSize);
     }
@@ -34,7 +48,7 @@ public abstract class Board {
                 //add the cell to the row
                 cellRow.add(cell);
 
-                //add the cell to the grid
+                //add the cell to the ui grid
                 grid.add(cell, col, row);
             }
             //add the whole row to componentGrid

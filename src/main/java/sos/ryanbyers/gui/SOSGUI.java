@@ -128,10 +128,11 @@ public class SOSGUI  {
     public void DrawSequenceLine(SequenceCoordinates sequence, boolean isRedPlayer) {
         Pair<Integer, Integer> cellSize = board.GetCellSize();
 
-        double startX = sequence.coordinatesStart.getValue() * cellSize.getKey() + (double) cellSize.getKey() / 2;
-        double startY = sequence.coordinatesStart.getKey() * cellSize.getKey() + (double) cellSize.getKey() / 2;
-        double endX = sequence.coordinatesEnd.getValue() * cellSize.getKey() + (double) cellSize.getKey() / 2;
-        double endY = sequence.coordinatesEnd.getKey() * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double startX = sequence.coordinatesStart.y * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double startY = sequence.coordinatesStart.x * cellSize.getKey() + (double) cellSize.getKey() / 2;
+
+        double endX = sequence.coordinatesEnd.y * cellSize.getKey() + (double) cellSize.getKey() / 2;
+        double endY = sequence.coordinatesEnd.x * cellSize.getKey() + (double) cellSize.getKey() / 2;
 
         Line line = new Line(startX, startY, endX, endY);
         line.setStroke(isRedPlayer ? Color.RED : Color.BLUE);

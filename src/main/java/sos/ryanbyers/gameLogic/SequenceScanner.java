@@ -26,6 +26,8 @@ public class SequenceScanner {
 
     //run after every move made
     //row and col store the position (x, y) of the cell of the last piece placement
+
+    //TO-DO: pass pieceIsO by parameter (makes AIBoardScan much easier)
     public int SequenceSearch(SOSGUI gui, int row, int col, TurnManager turnManager) {
         //the piece is an 'O', or it is not an 'O' (in which case, it must be an 'S')
         //this is needed because the scanner looks for different sequence fragments depending on the piece it is searching from
