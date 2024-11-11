@@ -12,24 +12,8 @@ import java.util.Set;
 import java.util.Objects;
 
 public class SequenceScanner {
-    //run after every move made
-    public Pair<Boolean, Integer> SequenceSearch(SOSGUI gui, int row, int col, TurnManager turnManager) {
-        //this counter is relevant to general games:
-        int points = 0;
-
-        //this flag is relevant to simple games:
-        boolean sequenceMade = false;
-
-        boolean pieceIsO = false;
-        //figure out what the current piece is:
-        if(turnManager.redTurn){
-            pieceIsO = gui.buttons.redO.isSelected();
-        }
-        else{
-            pieceIsO = gui.buttons.blueO.isSelected();
-        }
-
-        int[][] directionsToScan = {
+    //contains all of the directions in which are necessary to scan (from the perspective of the placed piece)
+    private int[][] directionsToScan = {
                 {-1, 0},  // above
                 {-1, 1},  // above-right diagonal
                 {0, 1},   // right
@@ -40,21 +24,44 @@ public class SequenceScanner {
                 {-1, -1}  // above-left diagonal
         };
 
-        //track unique sequences to prevent duplicate counting
-        Set<SequenceCoordinates> uniqueSequences = new HashSet<>();
+    //run after every move made
+    public Pair<Boolean, Integer> SequenceSearch(SOSGUI gui, int row, int col, TurnManager turnManager) {
+        //general game usage: count # of points made during this move (also a sequence was made if points > 0, so the turn shouldnt change)
+        //simple game usage: if points > 0, a sequence was made and the game can now end
+        int points = 0;
 
-        for (int[] direction : directionsToScan) {
+        boolean pieceIsO = GetPieceType(turnManager);
+
+        return PerformScan();
+    }
+
+    private Pair<Boolean, Integer> PerformScan(){
+        for (int[] direction : this.directionsToScan) {
+            //if a sequence is not detected, this function will return null to sequence
             SequenceCoordinates sequence = CheckDirection(gui.board, row, col, direction[0], direction[1], pieceIsO);
-            if (sequence != null && uniqueSequences.add(sequence)){
-                sequenceMade = true;
+            if (sequence != null){
+                //keep track of number of sequences made
                 points++;
-
+                //draw a line to show the sequence visually
                 gui.DrawSequenceLine(sequence.startRow, sequence.startCol, sequence.endRow, sequence.endCol, turnManager.redTurn);
             }
         }
         return new Pair<>(sequenceMade, points);
     }
 
+    //figure out what the current piece is (is it an O or is it not an O?): (relevant to scanning process)
+    private boolean GetPieceType(TurnManager turnManager){
+        if(turnManager.redTurn){
+            pieceIsO = gui.buttons.redO.isSelected();
+        }
+        else{
+            pieceIsO = gui.buttons.blueO.isSelected();
+        }
+
+        return pieceIsO;
+    }
+
+//TO-DO: refactor this mess:
     private SequenceCoordinates CheckDirection(Board board, int row, int col, int rowDir, int colDir, boolean pieceIsO) {
         //if the piece placed is 'O', we need to find 'S' on both sides
         if (pieceIsO) {
