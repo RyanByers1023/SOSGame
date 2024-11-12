@@ -1,6 +1,5 @@
 package sos.ryanbyers.input;
 
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
@@ -18,6 +17,7 @@ public class ButtonListener {
         this.alertMessage = new AlertMessage();
 
         AttachStartButtonListener(turnManager, gui);
+        HandleComputerToggleButtons(gui);
     }
 
     private void AttachCellListeners(SOSGUI gui, TurnManager turnManager) {
@@ -41,6 +41,32 @@ public class ButtonListener {
         //store in a Vec2 for easier readability:
         Vec2 cellPos = new Vec2(col, row);
 
+        if(!PieceSelected(gui, turnManager)){
+            return;
+        }
+
+        //a piece was selected, modify the button in place to reflect this:
+        if(!gameLogicManager.IsComputerTurn(gui, turnManager)){
+            gui.ModifyButtonNormal(button, turnManager);
+
+            //disable the button on the board:
+            gui.board.DisableCell(cellPos);
+
+            //handle the current turn according to the appropriate gamemode rules:
+            gameLogicManager.HandleTurn(gui, turnManager, cellPos);
+
+            return;
+        }
+
+        gameLogicManager.HandleComputerMove(gui, turnManager);
+    }
+
+    private boolean IsComputerTurn(SOSGUI gui, TurnManager turnManager) {
+        return  gui.buttons.redPlayerIsComputer.isSelected() && turnManager.redTurn ||
+                gui.buttons.bluePlayerIsComputer.isSelected() && turnManager.blueTurn;
+    }
+
+    private boolean PieceSelected(SOSGUI gui, TurnManager turnManager) {
         //who placed the latest piece?:
         boolean isRedTurn = turnManager.redTurn;
         boolean pieceSelected = isRedTurn ?
@@ -49,18 +75,16 @@ public class ButtonListener {
 
         //was a piece even selected?:
         if (!pieceSelected) {
-            alertMessage.AlertPieceNotSelected(turnManager);
-            return;
+            if(isRedTurn && !gui.buttons.redPlayerIsComputer.isSelected()){
+                alertMessage.AlertPieceNotSelected(turnManager);
+                return false;
+            }
+            else if(!isRedTurn && !gui.buttons.bluePlayerIsComputer.isSelected()){
+                alertMessage.AlertPieceNotSelected(turnManager);
+                return false;
+            }
         }
-
-        //a piece was selected, modify the button in place to reflect this:
-        gui.ModifyButton(button, turnManager);
-
-        //disable the button on the board:
-        gui.board.DisableCell(cellPos);
-
-        //handle the current turn according to the appropriate gamemode rules:
-        gameLogicManager.HandleTurn(gui, turnManager, cellPos);
+        return true;
     }
 
     private void AttachStartButtonListener(TurnManager turnManager, SOSGUI gui) {
@@ -78,8 +102,46 @@ public class ButtonListener {
                 : new SOSSimpleGamemode();
 
         gui.ResetBoard();
+
+        gameLogicManager.gameInProgress = true;
+
         AttachCellListeners(gui, turnManager);
+
         turnManager.StartNewGame();
+
         gui.UpdateTurnIndicator(turnManager);
+
+        gui.DisableComputerCheckboxes();
+
+        if(BothPlayersAreComputers(gui)) {
+            HandleAutomatedGame(gui, turnManager);
+        }
+
+        if(IsComputerTurn(gui, turnManager)){
+            gameLogicManager.HandleComputerMove(gui, turnManager);
+        }
+    }
+
+    private void HandleAutomatedGame(SOSGUI gui, TurnManager turnManager){
+        while(gameLogicManager.gameInProgress){
+            gameLogicManager.HandleComputerMove(gui, turnManager);
+        }
+    }
+
+    private boolean BothPlayersAreComputers(SOSGUI gui){
+        return gui.buttons.redPlayerIsComputer.isSelected() && gui.buttons.bluePlayerIsComputer.isSelected();
+    }
+
+    private void HandleComputerToggleButtons(SOSGUI gui){
+        //add listeners to disable/enable radio buttons based on checkbox state
+        gui.buttons.bluePlayerIsComputer.selectedProperty().addListener((observable, oldValue, isSelected) -> {
+            gui.buttons.blueS.setDisable(isSelected);
+            gui.buttons.blueO.setDisable(isSelected);
+        });
+
+        gui.buttons.redPlayerIsComputer.selectedProperty().addListener((observable, oldValue, isSelected) -> {
+            gui.buttons.redS.setDisable(isSelected);
+            gui.buttons.redO.setDisable(isSelected);
+        });
     }
 }

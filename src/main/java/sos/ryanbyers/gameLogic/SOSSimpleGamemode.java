@@ -1,6 +1,7 @@
 package sos.ryanbyers.gameLogic;
 
 import sos.ryanbyers.gui.SOSGUI;
+import sos.ryanbyers.gui.SequenceCoordinates;
 import sos.ryanbyers.gui.Vec2;
 
 public class SOSSimpleGamemode extends SOSGamemode {
@@ -12,13 +13,18 @@ public class SOSSimpleGamemode extends SOSGamemode {
     @Override
     public void HandleTurn(SOSGUI gui, TurnManager turnManager, Vec2 cellPos){
         if(SequenceMade(gui, cellPos, turnManager)){
+            gameInProgress = false;
             HandleSequenceFound(gui, turnManager);
+            gui.EnableComputerCheckboxes();
             return;
         }
         if(BoardFull(gui.board)){
+            gameInProgress = false;
             HandleStalemate(gui);
+            gui.EnableComputerCheckboxes();
             return;
         }
+
         turnManager.ChangeTurns();
         gui.UpdateTurnIndicator((turnManager));
     }

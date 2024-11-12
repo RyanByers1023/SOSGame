@@ -1,9 +1,7 @@
 package sos.ryanbyers.gui;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 public class ButtonHolder {
     public RadioButton simpleGamemode;
@@ -12,8 +10,12 @@ public class ButtonHolder {
     public RadioButton blueS;
     public RadioButton blueO;
 
+    public CheckBox bluePlayerIsComputer;
+
     public RadioButton redS;
     public RadioButton redO;
+
+    public CheckBox redPlayerIsComputer;
 
     public Button startButton;
 
@@ -39,6 +41,8 @@ public class ButtonHolder {
         blueO = new RadioButton("O");
         blueO.setId("blueO");
 
+        bluePlayerIsComputer = new CheckBox("Make Blue a computer?");
+
         //set correct group (bluePiece group)
         ToggleGroup bluePieceToggle = new ToggleGroup();
         blueS.setToggleGroup(bluePieceToggle);
@@ -50,6 +54,8 @@ public class ButtonHolder {
 
         redO = new RadioButton("O");
         redO.setId("redO");
+
+        redPlayerIsComputer = new CheckBox("Make Red a computer?");
 
         //set correct group (redPiece group)
         ToggleGroup redPieceToggle = new ToggleGroup();

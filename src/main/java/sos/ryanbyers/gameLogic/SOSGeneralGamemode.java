@@ -1,6 +1,7 @@
 package sos.ryanbyers.gameLogic;
 
 import sos.ryanbyers.gui.SOSGUI;
+import sos.ryanbyers.gui.SequenceCoordinates;
 import sos.ryanbyers.gui.Vec2;
 
 public class SOSGeneralGamemode extends SOSGamemode {
@@ -25,18 +26,18 @@ public class SOSGeneralGamemode extends SOSGamemode {
             else{
                 HandleStalemate(gui);
             }
+            gameInProgress = false;
+            gui.EnableComputerCheckboxes();
         }
         //if none of the above are applicable, just change the turn to the other player
         turnManager.ChangeTurns();
-        gui.UpdateTurnIndicator((turnManager));
+        gui.UpdateTurnIndicator(turnManager);
     }
 
     //handle when a stalemate is reached:
     @Override
     public void HandleStalemate(SOSGUI gui){
         alertMessage.NotifyGeneralStalemate(redSequences);
-        //stop the user from inputting further... (this will be the same for the rest of the methods)
-        gui.ResetBoard();
         gui.labels.turnIndicator.setText("Stalemate! -- Game Over!");
         ClearPoints();
     }
@@ -45,8 +46,6 @@ public class SOSGeneralGamemode extends SOSGamemode {
     @Override
     public void HandleRedVictory(SOSGUI gui){
         alertMessage.NotifyGeneralRedVictory(redSequences, blueSequences);
-        //prevent user input
-        gui.ResetBoard();
         gui.labels.turnIndicator.setText("Congrats, Red! -- Game Over!");
         ClearPoints();
     }
@@ -55,8 +54,6 @@ public class SOSGeneralGamemode extends SOSGamemode {
     @Override
     public void HandleBlueVictory(SOSGUI gui){
         alertMessage.NotifyGeneralBlueVictory(redSequences, blueSequences);
-        //stop user input
-        gui.ResetBoard();
         gui.labels.turnIndicator.setText("Congrats, Blue! -- Game Over!");
         ClearPoints();
     }

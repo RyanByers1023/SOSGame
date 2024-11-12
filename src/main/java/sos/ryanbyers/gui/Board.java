@@ -3,6 +3,8 @@ package sos.ryanbyers.gui;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.util.Pair;
+import sos.ryanbyers.players.AIBoardScan;
+import sos.ryanbyers.players.BoardHeuristics;
 
 
 import java.util.ArrayList;
@@ -62,6 +64,26 @@ public abstract class Board {
         }
     }
 
+    public void DisableUserInput() {
+        for (ArrayList<Region> column : componentGrid) {
+            for (Region cell : column) {
+                cell.setDisable(true);
+            }
+        }
+    }
+
+    public void EnableUserInput(){
+        for (int col = 0; col < componentGrid.size(); ++col) {
+            for (int row = 0; row < componentGrid.size(); ++row) {
+                Vec2 currentCell = new Vec2(col, row);
+
+                if(unoccupiedCells.contains(currentCell)){
+                    componentGrid.get(col).get(row).setDisable(false);
+                }
+            }
+        }
+    }
+
     //for easy access to buttons
     public Region GetCell(Vec2 cellPos){
         return this.componentGrid.get(cellPos.x).get(cellPos.y);
@@ -74,6 +96,10 @@ public abstract class Board {
     public void DisableCell(Vec2 cellPos){
         GetCell(cellPos).setDisable(true);
         unoccupiedCells.remove(cellPos);
+    }
+
+    public boolean BoardFull(){
+        return unoccupiedCells.isEmpty();
     }
 
     public abstract Region InstantiateCell();

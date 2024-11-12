@@ -10,7 +10,6 @@ public class TurnManager {
     private final AlertMessage alert;
 
     public TurnManager(){
-
         random = new Random();
         alert = new AlertMessage();
 

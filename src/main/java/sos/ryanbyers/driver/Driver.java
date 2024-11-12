@@ -21,7 +21,6 @@ public class Driver extends Application {
         //set up listeners:
         //attach listeners to board (from gui) and to the start button (from gui)
         buttonListener = new ButtonListener(turnManager, gui);
-
     }
 
     public static void main(String[] args) { launch(args); }

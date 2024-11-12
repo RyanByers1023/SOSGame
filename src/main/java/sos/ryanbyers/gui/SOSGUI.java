@@ -9,6 +9,7 @@ import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import sos.ryanbyers.gameLogic.TurnManager;
+import sos.ryanbyers.players.CellHeuristics;
 
 public class SOSGUI  {
     public ButtonHolder buttons;
@@ -71,8 +72,8 @@ public class SOSGUI  {
     private void FillVBoxes(){
         vBoxes.mainBox.getChildren().add(hBoxes.gameOptionsBox);
 
-        vBoxes.redPlayerChoicesBox.getChildren().addAll(labels.redPlayer, buttons.redS, buttons.redO);
-        vBoxes.bluePlayerChoicesBox.getChildren().addAll(labels.bluePlayer, buttons.blueS, buttons.blueO);
+        vBoxes.redPlayerChoicesBox.getChildren().addAll(labels.redPlayer, buttons.redS, buttons.redO, buttons.redPlayerIsComputer);
+        vBoxes.bluePlayerChoicesBox.getChildren().addAll(labels.bluePlayer, buttons.blueS, buttons.blueO, buttons.bluePlayerIsComputer);
 
         vBoxes.mainBox.getChildren().add(hBoxes.gameSpaceBox);
 
@@ -84,7 +85,7 @@ public class SOSGUI  {
     }
 
     //runs when a valid cell on the SOS board is pressed
-    public void ModifyButton(Button button, TurnManager turnManager){
+    public void ModifyButtonNormal(Button button, TurnManager turnManager){
         //set appropriate team color for piece depending on whose turn it is:
         String textColor = turnManager.blueTurn ? "blue" : "red";
         button.setStyle("-fx-text-fill: " + textColor + "; -fx-font-weight: bold;");
@@ -98,6 +99,23 @@ public class SOSGUI  {
         else{
             button.setText(buttons.blueO.isSelected() ? "O" : "S");
             button.setId(buttons.blueO.isSelected() ? "O" : "S");
+        }
+
+        labels.turnIndicator.setText((turnManager.blueTurn) ? "Blue" : "Red");
+    }
+
+    public void ModifyButtonComputer(Button button, TurnManager turnManager, CellHeuristics cellInfo){
+        //set appropriate team color for piece depending on whose turn it is:
+        String textColor = turnManager.blueTurn ? "blue" : "red";
+        button.setStyle("-fx-text-fill: " + textColor + "; -fx-font-weight: bold;");
+
+        if(cellInfo.pieceIsO){
+            button.setText("O");
+            button.setId("O");
+        }
+        else{
+            button.setText("S");
+            button.setId("S");
         }
 
         labels.turnIndicator.setText((turnManager.blueTurn) ? "Blue" : "Red");
@@ -137,6 +155,16 @@ public class SOSGUI  {
         line.setManaged(false);
 
         overlayPane.getChildren().add(line);
+    }
+
+    public void DisableComputerCheckboxes(){
+        this.buttons.bluePlayerIsComputer.setDisable(true);
+        this.buttons.redPlayerIsComputer.setDisable(true);
+    }
+
+    public void EnableComputerCheckboxes(){
+        this.buttons.bluePlayerIsComputer.setDisable(false);
+        this.buttons.redPlayerIsComputer.setDisable(false);
     }
 
     private void DisplayWindow(Stage primaryStage, int windowWidth, int windowHeight){

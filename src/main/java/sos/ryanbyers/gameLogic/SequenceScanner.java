@@ -29,12 +29,14 @@ public class SequenceScanner {
     public int SequenceSearch(SOSGUI gui, Vec2 cellPos, TurnManager turnManager) {
         //the piece is an 'O', or it is not an 'O' (in which case, it must be an 'S')
         //this is needed because the scanner looks for different sequence fragments depending on the piece it is searching from
+        boolean redTurn = turnManager.redTurn;
         boolean pieceIsO = GetPieceType(gui, turnManager);
 
-        return PerformScan(gui, cellPos, turnManager, pieceIsO);
+        return PerformScan(gui, cellPos, pieceIsO, redTurn, true);
     }
 
-    private int PerformScan(SOSGUI gui, Vec2 cellPos, TurnManager turnManager, boolean pieceIsO) {
+    //this function is also used by the computer opponent. realMove is set to false when this occurs
+    public int PerformScan(SOSGUI gui, Vec2 cellPos, boolean pieceIsO, boolean redTurn, boolean realMove) {
         //general game usage: count # of sequences made during this move. dont change turn if at least one was made
         //simple game usage: if sequencesMade > 0, a sequence was made and the game can now end
         int sequencesMade = 0;
@@ -49,7 +51,9 @@ public class SequenceScanner {
                 //keep track of number of sequences made
                 sequencesMade++;
                 //draw a line to show the sequence visually
-                gui.DrawSequenceLine(sequence, turnManager.redTurn);
+                if(realMove){
+                    gui.DrawSequenceLine(sequence, redTurn);
+                }
             }
         }
         return sequencesMade;
@@ -139,9 +143,5 @@ public class SequenceScanner {
                 cellPos.y < board.componentGrid.size() &&
                 cellPos.x >= 0 &&
                 cellPos.x < board.componentGrid.size();
-    }
-
-    public boolean BoardFull(Board board){
-        return board.unoccupiedCells.isEmpty();
     }
 }
