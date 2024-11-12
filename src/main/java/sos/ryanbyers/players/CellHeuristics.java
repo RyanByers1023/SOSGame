@@ -16,6 +16,9 @@ public class CellHeuristics implements Comparable<CellHeuristics> {
     //override compareTo to simulate '>' for easy heuristic value comparison
     @Override
     public int compareTo(CellHeuristics o) {
+        if(o == null){
+            return 0;
+        }
         return Integer.compare(this.heuristicValue, o.heuristicValue);
     }
 }

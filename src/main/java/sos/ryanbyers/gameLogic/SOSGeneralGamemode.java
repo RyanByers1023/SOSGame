@@ -16,6 +16,11 @@ public class SOSGeneralGamemode extends SOSGamemode {
         if(SequenceMade(gui, cellPos, turnManager)){
             HandleSequenceFound(gui, turnManager);
         }
+        else{
+            //if a sequence was not made, just change the turn to the other player
+            turnManager.ChangeTurns();
+            gui.UpdateTurnIndicator(turnManager);
+        }
         if(BoardFull(gui.board)){
             if(redSequences > blueSequences){
                 HandleRedVictory(gui);
@@ -29,9 +34,6 @@ public class SOSGeneralGamemode extends SOSGamemode {
             gameInProgress = false;
             gui.EnableComputerCheckboxes();
         }
-        //if none of the above are applicable, just change the turn to the other player
-        turnManager.ChangeTurns();
-        gui.UpdateTurnIndicator(turnManager);
     }
 
     //handle when a stalemate is reached:

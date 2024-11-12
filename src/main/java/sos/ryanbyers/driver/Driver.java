@@ -1,5 +1,6 @@
 package sos.ryanbyers.driver;
 
+import sos.ryanbyers.gameLogic.GameStateManager;
 import sos.ryanbyers.gameLogic.TurnManager;
 import sos.ryanbyers.gui.SOSGUI;
 
@@ -9,6 +10,7 @@ import sos.ryanbyers.input.ButtonListener;
 
 public class Driver extends Application {
     private ButtonListener buttonListener;
+    GameStateManager gameStateManager;
 
     @Override
     public void start(Stage primaryStage) {
