@@ -30,9 +30,8 @@ public class ButtonListener {
         }
     }
 
+    //returns the location
     public Vec2 HandleCellClick(SOSGUI gui, TurnManager turnManager, Button button) {
-
-        //get location of button click (to search for sequences more efficiently):
         //get the row:
         int row = GridPane.getRowIndex(button);
 
@@ -43,27 +42,6 @@ public class ButtonListener {
         Vec2 cellPos = new Vec2(col, row);
 
         return cellPos;
-    }
-
-    private boolean PieceSelected(SOSGUI gui, TurnManager turnManager) {
-        //who placed the latest piece?:
-        boolean isRedTurn = turnManager.redTurn;
-        boolean pieceSelected = isRedTurn ?
-                (gui.buttons.redO.isSelected() || gui.buttons.redS.isSelected()) :
-                (gui.buttons.blueO.isSelected() || gui.buttons.blueS.isSelected());
-
-        //was a piece even selected?:
-        if (!pieceSelected) {
-            if(isRedTurn && !gui.buttons.redPlayerIsComputer.isSelected()){
-                alertMessage.AlertPieceNotSelected(turnManager);
-                return false;
-            }
-            else if(!isRedTurn && !gui.buttons.bluePlayerIsComputer.isSelected()){
-                alertMessage.AlertPieceNotSelected(turnManager);
-                return false;
-            }
-        }
-        return true;
     }
 
     private void AttachStartButtonListener(TurnManager turnManager, SOSGUI gui) {
@@ -88,7 +66,21 @@ public class ButtonListener {
     }
 
     private void AttachComputerCheckboxListeners(){
-        gui.buttons.bluePlayerIsComputer.selectedProperty().addListener(observable, oldValue, isSelected);
-        gui.buttons.redPlayerIsComputer.selectedProperty().addListener((observable, oldValue, isSelected);
+
+        gui.buttons.bluePlayerIsComputer.selectedProperty().addListener((observable, oldValue, isSelected) ->{
+        if (isSelected) {
+            //add logic to handle checkbox being checked
+        } else {
+            //add logic to handle checkbox being unchecked
+        }
+        });
+
+        gui.buttons.redPlayerIsComputer.selectedProperty().addListener((observable, oldValue, isSelected) -> {
+        if (isSelected) {
+            //add logic to handle checkbox being checked
+        } else {
+            //add logic to handle checkbox being unchecked
+        }
+        });
     }
 }

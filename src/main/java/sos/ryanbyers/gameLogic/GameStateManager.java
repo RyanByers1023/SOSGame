@@ -1,10 +1,9 @@
 package sos.ryanbyers.gameLogic;
 
 //TO-DO: find a way to implement this as the main game state manager. Need to be able to take input in real time
-//respond to input in real time/not just respond to board clicks
+//goal of this class is to add the ability to respond to input in real time--not just respond to board clicks
 
-//start game tick once the start button is pressed
-//end game tick once the game ends (dependent on rules stored/handled within SOSGamemode)
+//VIOLATIONS note: seems like most of the FOF violations are stemming from the SOSGUI object, gui.
 
 public class GameStateManager {
     //manages turns between two players: red and blue
@@ -19,29 +18,17 @@ public class GameStateManager {
     //handles alert messages
     private final Alert alert;
 
-    //default constructor
+    //default constructor -- gameLogic manager needs to be instantiated before this object is created...
     public GameStateManager(SOSGamemode gameLogicManager) {
         this.gameLogicManager = gameLogicManager;
         this.turnManager = new TurnManager();
         this.alert = new Alert();
     }
 
-    public void ChangeTurns(){
-        turnManager.ChangeTurns();
-    }
-
-    private boolean IsRedTurn(){
-        return turnManager.redTurn;
-    }
-
-    private boolean IsBlueTurn(){
-        return !turnManager.redTurn;
-    }
-
     public void StartGame(SOSGUI gui){
         while(this.gameLogicManager.gameInProgress){
 
-            if (!GamemodeSelected(gui)){  //alert the player, and prevent the game from beginning:
+            if (!GamemodeSelected(gui)){  //cannot start the game without a gamemode selected
                 break;  
             }
 
@@ -54,7 +41,6 @@ public class GameStateManager {
 
             HandleComputerTurn(gui, this.turnManager);
 
-            
             if(!PieceSelected(gui, turnManager)){
                 return;
             }
@@ -66,9 +52,45 @@ public class GameStateManager {
             gui.board.DisableCell(cellPos);
 
             //handle the current turn according to the appropriate gamemode rules:
+            //this function call has the ability to end the game (set gameInProgress = false), make this more understandable
             gameLogicManager.HandleTurn(gui, turnManager, cellPos);
-            
         }
+    }
+    
+    public void ChangeTurns(){
+        turnManager.ChangeTurns();
+    }
+
+    private boolean IsRedTurn(){
+        return turnManager.redTurn;
+    }
+
+    private boolean IsBlueTurn(){
+        return !turnManager.redTurn;
+    }
+
+    private boolean PieceSelected(SOSGUI gui, TurnManager turnManager) {
+        //who is trying to place a piece down?:
+        boolean pieceSelected = isRedTurn ?
+                //VIOLATION: FOF -- refactor
+                (gui.buttons.redO.isSelected() || gui.buttons.redS.isSelected()) :
+                //VIOLATION: FOF -- refactor
+                (gui.buttons.blueO.isSelected() || gui.buttons.blueS.isSelected());
+
+        //was a piece even selected?:
+        if (!pieceSelected) {
+            //VIOLATION: FOF -- refactor
+            if(IsRedTurn() && !gui.buttons.redPlayerIsComputer.isSelected()){ //handle blue
+                alertMessage.AlertPieceNotSelected(turnManager);
+                return false;
+            }
+            //VIOLATION: FOF -- refactor
+            else if(!IsRedTurn() && !gui.buttons.bluePlayerIsComputer.isSelected()){ //handle red
+                alertMessage.AlertPieceNotSelected(turnManager);
+                return false;
+            }
+        }
+        return true;
     }
 
     private void HandleComputerTurn(){
