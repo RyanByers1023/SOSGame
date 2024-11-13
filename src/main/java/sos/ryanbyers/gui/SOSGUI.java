@@ -167,6 +167,22 @@ public class SOSGUI  {
         this.buttons.redPlayerIsComputer.setDisable(false);
     }
 
+    public void DisableBlueRadioButtons(){
+        buttons.blueS.setDisable(isSelected);
+        buttons.blueO.setDisable(isSelected);
+
+        buttons.blueS.setSelected(false);
+        buttons.blueO.setSelected(false);
+    }
+    
+    public void DisableRedRadioButtons(){
+        buttons.redS.setDisable(isSelected);
+        buttons.redO.setDisable(isSelected);
+
+        buttons.redS.setSelected(false);
+        buttons.redO.setSelected(false);
+    }
+
     private void DisplayWindow(Stage primaryStage, int windowWidth, int windowHeight){
         Scene scene = new Scene(vBoxes.mainBox, windowWidth, windowHeight);
 
