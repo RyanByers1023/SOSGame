@@ -25,35 +25,37 @@ public class GameStateManager {
         this.alert = new Alert();
     }
 
+    //this code executes when the start button is pressed on the gui
     public void StartGame(SOSGUI gui){
+        if (!GamemodeSelected(gui)){  //cannot start the game without a gamemode selected
+            return;  
+        }
+
+        //start a new game:
+        ResetGUI(gui);
+        this.turnManager.StartNewGame();
+
+        //get the game rules:
+        this.gameLogicManager = GetGamemode(gui);
+
         while(this.gameLogicManager.gameInProgress){
-
-            if (!GamemodeSelected(gui)){  //cannot start the game without a gamemode selected
-                break;  
+            //it is the computer's turn
+            if(IsComputerTurn(gui)){
+                HandleComputerTurn(gui, this.turnManager);
+                continue;
             }
-
-            //start a new game:
-            ResetGUI(gui);
-            this.turnManager.StartNewGame();
-
-            //get the game rules:
-            this.gameLogicManager = GetGameLogicManager(gui);
-
-            HandleComputerTurn(gui, this.turnManager);
-
+            //it is a human player's turn
+            else{
             if(!PieceSelected(gui, turnManager)){
-                return;
+                //this may result in an infinite loop...
+                continue;
             }
 
-            gui.ModifyButtonNormal(button, turnManager);
-
-            //disable the button on the board:
-            //VIOLATION: refactor:
-            gui.board.DisableCell(cellPos);
+            MarkCell(gui, cellPos);
 
             //handle the current turn according to the appropriate gamemode rules:
-            //this function call has the ability to end the game (set gameInProgress = false), make this more understandable
             gameLogicManager.HandleTurn(gui, turnManager, cellPos);
+            }
         }
     }
     
@@ -67,6 +69,14 @@ public class GameStateManager {
 
     private boolean IsBlueTurn(){
         return !turnManager.redTurn;
+    }
+
+    private void MarkCell(SOSGUI gui, cellPos){
+        gui.ModifyButtonNormal(button, turnManager);
+
+        //disable the button on the board:
+        //VIOLATION: refactor:
+        gui.board.DisableCell(cellPos);
     }
 
     private boolean PieceSelected(SOSGUI gui, TurnManager turnManager) {
@@ -105,7 +115,7 @@ public class GameStateManager {
         }
     }
 
-    private SOSGamemode GetGameLogicManager(SOSGUI gui){
+    private SOSGamemode GetGamemode(SOSGUI gui){
         this.gameLogicManager = gui.buttons.generalGamemode.isSelected()
                 ? new SOSGeneralGamemode()
                 : new SOSSimpleGamemode();
